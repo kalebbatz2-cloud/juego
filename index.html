@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Qué aprendimos? - Modo Alumno / Classroom</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Afacad+Flux:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #0f172a;
+            font-family: 'Afacad Flux', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #f8fafc;
+        }
+        .slide-container {
+            background-color: #1e293b;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 900px;
+            min-height: 600px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #334155;
+        }
+        h1, h2, h3 { font-family: 'Comfortaa', cursive; color: #f8fafc; }
+        .slide-title { font-size: 36px; margin-bottom: 20px; text-align: center; color: #a5b4fc; }
+        p, label, input, button, select { font-size: 18px; }
+        .btn {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: #ffffff;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4); }
+        .btn-secondary { background: #334155; box-shadow: none; }
+        .btn-secondary:hover { background: #475569; }
+        input[type="text"], input[type="number"], select {
+            background-color: #0f172a;
+            border: 2px solid #475569;
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 10px;
+            width: 100%;
+            margin-top: 8px;
+            margin-bottom: 20px;
+        }
+        input:focus, select:focus { border-color: #6366f1; outline: none; }
+        .hidden { display: none !important; }
+        .content-area {
+            flex-grow: 1; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; width: 100%;
+        }
+        #home-view { text-align: center; }
+        #home-view h1 { font-size: 56px; margin-bottom: 15px; color: #818cf8; }
+        #home-view p { font-size: 20px; color: #94a3b8; margin-bottom: 40px; }
+        .home-buttons { display: flex; gap: 25px; justify-content: center; flex-wrap: wrap; }
+        .config-card {
+            background-color: #0f172a; border: 1px solid #334155;
+            border-radius: 14px; padding: 25px; margin-bottom: 20px;
+            width: 100%; max-width: 600px;
+        }
+        #join-view { text-align: center; max-width: 650px; margin: 0 auto; width: 100%; }
+        .lobby-box {
+            text-align: center; background: #0f172a; padding: 30px;
+            border-radius: 16px; border: 1px dashed #6366f1;
+            width: 100%; max-width: 500px; margin: 0 auto;
+        }
+        .room-code-display {
+            font-size: 48px; font-weight: 700; color: #34d399;
+            letter-spacing: 6px; margin: 15px 0; font-family: 'Comfortaa', cursive;
+        }
+        .quiz-container { width: 100%; max-width: 800px; margin: 0 auto; }
+        .timer-bar-container {
+            width: 100%; height: 10px; background-color: #0f172a;
+            border-radius: 5px; margin-bottom: 25px; overflow: hidden;
+        }
+        .timer-bar { height: 100%; background-color: #34d399; width: 100%; transition: width 1s linear; }
+        .question-text { font-size: 26px; font-weight: 600; margin-bottom: 30px; text-align: center; color: #f1f5f9; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .option-btn {
+            background-color: #334155; border: 2px solid transparent; color: #fff;
+            padding: 20px; border-radius: 14px; font-size: 18px; cursor: pointer;
+            transition: all 0.2s; text-align: left; font-family: 'Afacad Flux', sans-serif;
+        }
+        .option-btn:hover { background-color: #475569; border-color: #818cf8; }
+        .results-container { text-align: center; max-width: 800px; margin: 0 auto; width: 100%; }
+        .results-table-wrapper {
+            max-height: 250px; overflow-y: auto; margin: 20px 0;
+            border: 1px solid #334155; border-radius: 10px; text-align: left;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 15px; }
+        th, td { padding: 12px 15px; border-bottom: 1px solid #334155; }
+        th { background-color: #0f172a; color: #a5b4fc; position: sticky; top: 0; }
+        td { color: #cbd5e1; }
+        .badge-incorrect { color: #f87171; font-weight: 600; }
+        .badge-correct { color: #34d399; font-weight: 600; }
+        
+        .avatar-section-title { font-size: 15px; color: #a5b4fc; margin: 12px 0 8px 0; text-align: left; font-weight: 600; }
+        .avatars-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px; }
+        .avatar-option {
+            background-color: #0f172a; border: 2px solid #475569; border-radius: 10px;
+            padding: 6px 4px; text-align: center; cursor: pointer; transition: all 0.2s;
+        }
+        .avatar-option img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; display: block; margin: 0 auto 4px auto; }
+        .avatar-option span { font-size: 11px; color: #cbd5e1; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .avatar-option:hover { border-color: #818cf8; background-color: #1e293b; }
+        .avatar-option.selected { border-color: #34d399; background-color: rgba(52, 211, 153, 0.15); }
+
+        /* Clases para animación gradual de la UI */
+        .anim-step {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .anim-step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- ANIMACIÓN ESTILO VIDEOJUEGO PARA EL RANGO --- */
+        .rank-badge-container {
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .rank-badge-container.show-rank {
+            animation: rankPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes rankPop {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; filter: blur(10px); }
+            50% { transform: scale(1.4) rotate(15deg); opacity: 1; filter: blur(0px); }
+            75% { transform: scale(0.9) rotate(-5deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0px); }
+        }
+
+        .rank-letter {
+            font-size: 68px; 
+            font-weight: 800; 
+            margin: 0; 
+            line-height: 1;
+            font-family: 'Comfortaa', cursive;
+        }
+     </style>
+</head>
+<body>
+
+<audio id="bg-music" loop>
+    <source src="Super%20Mario%2064%20Soundtrack%20-%20File%20Select.mp3" type="audio/mpeg">
+</audio>
+<audio id="menu-music" loop>
+    <source src="Choosing%20the%20Toppings.mp3" type="audio/mpeg">
+</audio>
+<audio id="gameplay-music" loop>
+    <source src="Everybody's%20Favorite%20Subject%20-%20Baldi's%20Basics%20Classic%20Remastered%20Original%20Soundtrack.mp3" type="audio/mpeg">
+</audio>
+<audio id="music-rank-d">
+    <source src="D%20Rank%20-%20Pizza%20Tower%20OST.mp3" type="audio/mpeg">
+</audio>
+<audio id="music-rank-b">
+    <source src="B%20&%20C%20Ranks%20-%20Pizza%20Tower%20OST.mp3" type="audio/mpeg">
+</audio>
+<audio id="music-rank-a">
+    <source src="A%20Rank%20-%20Pizza%20Tower%20OST.mp3" type="audio/mpeg">
+</audio>
+<audio id="music-rank-p">
+    <source src="P%20Rank%20-%20Pizza%20Tower%20OST.mp3" type="audio/mpeg">
+</audio>
+
+<div class="slide-container">
+    
+    <!-- VISTAS DE INICIO, CONFIG, LOBBY Y JUEGO (Ocultas por defecto) -->
+    <div id="home-view" class="content-area"><h1 style="color: #818cf8; font-size: 56px;">¿Qué aprendimos?</h1><p style="font-size: 20px; color: #94a3b8; margin-bottom: 40px;">Crea tu sala personalizada o únete a una partida</p><div class="home-buttons"><button class="btn" onclick="showView('create-config-view')"><i class="fa-solid fa-plus-circle"></i> Crear Sala</button><button class="btn btn-secondary" onclick="showView('join-view')"><i class="fa-solid fa-right-to-bracket"></i> Unirse a Sala</button></div></div>
+
+    <div id="create-config-view" class="content-area hidden"><h2 class="slide-title">Configuración General</h2><div class="config-card"><label>Tiempo por pregunta (segundos):</label><input type="number" id="config-timer" value="15" min="5" max="60"><label>Cantidad total de preguntas:</label><input type="number" id="config-num-questions" value="3" min="1" max="10"><label>Número máximo de personas permitidas:</label><input type="number" id="config-max-players" value="10" min="1" max="50"></div><div style="display: flex; justify-content: space-between; width: 100%; max-width: 600px;"><button class="btn btn-secondary" onclick="showView('home-view')">Salir</button><button class="btn" onclick="acceptConfigAndStartBuilder()">Aceptar y Crear Preguntas</button></div></div>
+
+    <div id="question-builder-view" class="content-area hidden"><h2 class="slide-title" id="builder-step-title">Creando Pregunta 1 de 3</h2><div class="config-card"><label>Escribe la pregunta:</label><input type="text" id="builder-q-text" placeholder="Ej. ¿Cuál es la capital de España?"><label>Número de respuestas para esta pregunta:</label><select id="builder-num-options" onchange="renderDynamicOptionsFields()"><option value="2">2 Respuestas</option><option value="3">3 Respuestas</option><option value="4" selected>4 Respuestas</option><option value="5">5 Respuestas</option></select><div id="dynamic-options-container" style="margin-top: 15px;"></div></div><div style="display: flex; justify-content: space-between; width: 100%; max-width: 600px;"><button class="btn btn-secondary" onclick="goBackInBuilder()">Volver</button><button class="btn" onclick="saveCurrentQuestionAndProceed()">Siguiente</button></div></div>
+
+    <div id="join-view" class="content-area hidden"><h2 class="slide-title" style="margin-bottom: 10px;">Unirse a una Sala</h2><div class="config-card" style="text-align: left; max-width: 600px; padding: 20px; margin-bottom: 15px;"><label style="font-size: 16px;">Tu Nombre:</label><input type="text" id="player-name" placeholder="Ej. Carlos" style="margin-bottom: 12px; padding: 10px 14px;"><label style="font-size: 16px;">Código de Sala:</label><input type="text" id="room-code-input" placeholder="Ej. 4892" style="text-transform: uppercase; margin-bottom: 12px; padding: 10px 14px;"><div class="avatar-section-title">Elige tu Avatar Femenino:</div><div class="avatars-grid"><div class="avatar-option" onclick="selectAvatar('f1', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Pepperoni" alt="F1"><span>Valkyrie</span></div><div class="avatar-option" onclick="selectAvatar('f2', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Mozzarella" alt="F2"><span>Mage</span></div><div class="avatar-option" onclick="selectAvatar('f3', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Basil" alt="F3"><span>Punk</span></div><div class="avatar-option" onclick="selectAvatar('f4', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Cherry" alt="F4"><span>Cyber</span></div><div class="avatar-option" onclick="selectAvatar('f5', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Truffle" alt="F5"><span>Queen</span></div></div><div class="avatar-section-title">Elige tu Avatar Masculino:</div><div class="avatars-grid" style="margin-bottom: 0;"><div class="avatar-option" onclick="selectAvatar('m1', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Brawler" alt="M1"><span>Brawler</span></div><div class="avatar-option" onclick="selectAvatar('m2', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Knight" alt="M2"><span>Knight</span></div><div class="avatar-option" onclick="selectAvatar('m3', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Rogue" alt="M3"><span>Rogue</span></div><div class="avatar-option" onclick="selectAvatar('m4', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Mech" alt="M4"><span>Mech</span></div><div class="avatar-option" onclick="selectAvatar('m5', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Phantom" alt="M5"><span>Phantom</span></div></div></div><div style="display: flex; gap: 15px; justify-content: center;"><button class="btn btn-secondary" onclick="showView('home-view')">Volver</button><button class="btn" onclick="joinRoom()">Entrar</button></div></div>
+
+    <div id="lobby-view" class="content-area hidden"><h2 class="slide-title">Sala Creada con Éxito</h2><div class="lobby-box"><p>Comparte este código de sala:</p><div class="room-code-display" id="display-room-code">----</div><p style="color: #34d399; margin-bottom: 25px;"><i class="fa-solid fa-users"></i> Configuración lista.</p><button class="btn" onclick="showView('home-view')">Volver al Inicio</button></div></div>
+
+    <div id="game-view" class="content-area hidden"><div class="quiz-container"><div class="timer-bar-container"><div class="timer-bar" id="timer-bar"></div></div><div style="display: flex; justify-content: space-between; color: #94a3b8; margin-bottom: 10px;"><span id="question-counter">Pregunta 1 de 3</span><span id="timer-text">15s</span></div><div class="question-text" id="question-title">Cargando...</div><div class="options-grid" id="options-container"></div></div></div>
+
+    <!-- VISTA RESULTADOS ACTUALIZADA -->
+    <div id="results-view" class="content-area hidden">
+        <div class="results-container">
+            <h2 class="slide-title anim-step" id="res-step-1" style="margin-bottom: 5px;">¡Entrega de Resultados!</h2>
+            <p class="anim-step" id="res-step-2" style="color: #818cf8; font-weight: 600; margin-bottom: 15px;"><span id="result-student-name"></span></p>
+            
+            <div style="display: flex; justify-content: center; gap: 60px; align-items: center; margin-bottom: 15px; min-height: 100px;">
+                <!-- Contador de aciertos -->
+                <div class="anim-step" id="res-step-3">
+                    <span style="color: #94a3b8; font-size: 14px; display: block; margin-bottom: 5px;">Aciertos:</span>
+                    <h1 id="final-score-percent" style="font-size: 48px; color: #34d399; font-variant-numeric: tabular-nums;">0%</h1>
+                </div>
+                <!-- Rango separado para explotar al final -->
+                <div id="res-step-rank" class="rank-badge-container">
+                    <span style="color: #94a3b8; font-size: 14px; display: block; margin-bottom: 5px;">Rango:</span>
+                    <div class="rank-letter" id="final-rank-title"></div>
+                </div>
+            </div>
+
+            <p class="anim-step" id="res-step-4" style="color: #cbd5e1; font-size: 16px; margin-bottom: 5px; text-align: left;">Detalle de tus respuestas:</p>
+            <div class="results-table-wrapper anim-step" id="res-step-5">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pregunta</th>
+                            <th>Tu Respuesta</th>
+                            <th>Respuesta Correcta</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-table-body"></tbody>
+                </table>
+            </div>
+            <button class="btn anim-step" id="res-step-6" onclick="showView('home-view')" style="margin-top: 10px;">Volver al Inicio</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyA35xKVcw4n1aHQxPYVwiBiRWZosINRmmA",
+        authDomain: "que-aprendimos.firebaseapp.com",
+        databaseURL: "https://que-aprendimos-default-rtdb.firebaseio.com",
+        projectId: "que-aprendimos",
+        storageBucket: "que-aprendimos.firebasestorage.app",
+        messagingSenderId: "845203502816",
+        appId: "1:845203502816:web:557a0e94629bddfea88285"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let tempRoomConfig = { timer: 15, totalQuestions: 3, maxPlayers: 10 };
+    let currentBuildingQuestions = [];
+    let currentBuildingIndex = 0;
+
+    let currentRoom = { code: "", timer: 15, questions: [] };
+    let sessionState = { 
+        currentQuestionIndex: 0, 
+        score: 0, 
+        timerInterval: null, 
+        timeLeft: 15,
+        playerName: "",
+        selectedAvatar: "",
+        userAnswers: []
+    };
+
+    function selectAvatar(avatarId, element) {
+        document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+        element.classList.add('selected');
+        sessionState.selectedAvatar = avatarId;
+    }
+
+    function manageMusic(viewId) {
+        const bgMusic = document.getElementById('bg-music');
+        const menuMusic = document.getElementById('menu-music');
+        const gameplayMusic = document.getElementById('gameplay-music');
+        
+        ['music-rank-d', 'music-rank-b', 'music-rank-a', 'music-rank-p'].forEach(id => {
+            const m = document.getElementById(id);
+            m.pause();
+            m.currentTime = 0;
+        });
+
+        if (viewId === 'create-config-view' || viewId === 'question-builder-view') {
+            menuMusic.pause(); bgMusic.play().catch(() => {});
+        } else if (viewId === 'join-view' || viewId === 'lobby-view') {
+            bgMusic.pause(); menuMusic.play().catch(() => {});
+        } else if (viewId === 'game-view') {
+            bgMusic.pause(); menuMusic.pause(); gameplayMusic.play().catch(() => {});
+        } else {
+            bgMusic.pause(); menuMusic.pause(); gameplayMusic.pause();
+        }
+    }
+
+    function showView(viewId) {
+        if(window.resultsAnimationTimeout) clearTimeout(window.resultsAnimationTimeout);
+        ['home-view', 'create-config-view', 'question-builder-view', 'join-view', 'lobby-view', 'game-view', 'results-view'].forEach(v => {
+            document.getElementById(v).classList.add('hidden');
+        });
+        document.getElementById(viewId).classList.remove('hidden');
+        manageMusic(viewId);
+    }
+
+    /* --- Lógica base para crear y jugar omitida visualmente pero intacta en funcionalidad --- */
+    function acceptConfigAndStartBuilder() { tempRoomConfig.timer = parseInt(document.getElementById('config-timer').value) || 15; tempRoomConfig.totalQuestions = parseInt(document.getElementById('config-num-questions').value) || 3; tempRoomConfig.maxPlayers = parseInt(document.getElementById('config-max-players').value) || 10; currentBuildingQuestions = []; currentBuildingIndex = 0; showView('question-builder-view'); loadBuilderStep(); }
+    function renderDynamicOptionsFields() { const numOpts = parseInt(document.getElementById('builder-num-options').value) || 4; const container = document.getElementById('dynamic-options-container'); container.innerHTML = '<label>Opciones de respuesta:</label>'; let optionsHtml = ''; let selectCorrectHtml = '<label style="margin-top: 10px; display: block;">¿Cuál es la correcta?</label><select id="builder-correct-index">'; for (let i = 0; i < numOpts; i++) { const letter = String.fromCharCode(65 + i); optionsHtml += `<input type="text" id="builder-opt-${i}" placeholder="Opción ${letter}" required style="margin-bottom: 10px;">`; selectCorrectHtml += `<option value="${i}">Opción ${letter}</option>`; } selectCorrectHtml += '</select>'; container.innerHTML += optionsHtml + selectCorrectHtml; }
+    function loadBuilderStep() { document.getElementById('builder-step-title').innerText = `Creando Pregunta ${currentBuildingIndex + 1} de ${tempRoomConfig.totalQuestions}`; if (currentBuildingQuestions[currentBuildingIndex]) { const savedQ = currentBuildingQuestions[currentBuildingIndex]; document.getElementById('builder-q-text').value = savedQ.text; document.getElementById('builder-num-options').value = savedQ.options.length.toString(); renderDynamicOptionsFields(); savedQ.options.forEach((optText, i) => { document.getElementById(`builder-opt-${i}`).value = optText; }); document.getElementById('builder-correct-index').value = savedQ.correct.toString(); } else { document.getElementById('builder-q-text').value = ''; document.getElementById('builder-num-options').value = '4'; renderDynamicOptionsFields(); } }
+    function goBackInBuilder() { if (currentBuildingIndex > 0) { currentBuildingIndex--; loadBuilderStep(); } else { showView('create-config-view'); } }
+    function saveCurrentQuestionAndProceed() { const qText = document.getElementById('builder-q-text').value.trim(); if (!qText) return alert("Escribe la pregunta."); const numOpts = parseInt(document.getElementById('builder-num-options').value); let opts = []; for (let i = 0; i < numOpts; i++) { opts.push(document.getElementById(`builder-opt-${i}`).value.trim() || `Opción ${String.fromCharCode(65 + i)}`); } currentBuildingQuestions[currentBuildingIndex] = { text: qText, options: opts, correct: parseInt(document.getElementById('builder-correct-index').value) }; currentBuildingIndex++; if (currentBuildingIndex < tempRoomConfig.totalQuestions) { loadBuilderStep(); } else { finalizeRoomCreation(); } }
+    function finalizeRoomCreation() { const roomCode = Math.floor(1000 + Math.random() * 9000).toString(); const roomData = { code: roomCode, timer: tempRoomConfig.timer, maxPlayers: tempRoomConfig.maxPlayers, questions: currentBuildingQuestions }; db.ref('rooms/' + roomCode).set(roomData).then(() => { currentRoom = roomData; document.getElementById('display-room-code').innerText = roomCode; showView('lobby-view'); }).catch((e) => alert("Error creando sala.")); }
+    function joinRoom() { const name = document.getElementById('player-name').value.trim(); const code = document.getElementById('room-code-input').value.trim(); if (!name || !code || !sessionState.selectedAvatar) return alert("Completa todos los campos y elige avatar."); db.ref('rooms/' + code).once('value').then((snap) => { if (snap.exists()) { currentRoom = snap.val(); sessionState.playerName = name; startPlayerGame(); } else alert("Código de sala inválido."); }).catch(() => alert("Error conectando al servidor.")); }
+    function startPlayerGame() { sessionState.currentQuestionIndex = 0; sessionState.score = 0; sessionState.userAnswers = []; showView('game-view'); loadQuestion(); }
+    function loadQuestion() { if (sessionState.currentQuestionIndex >= currentRoom.questions.length) return endGame(); const q = currentRoom.questions[sessionState.currentQuestionIndex]; document.getElementById('question-counter').innerText = `Pregunta ${sessionState.currentQuestionIndex + 1} de ${currentRoom.questions.length}`; document.getElementById('question-title').innerText = q.text; const optCont = document.getElementById('options-container'); optCont.innerHTML = ''; q.options.forEach((opt, i) => { optCont.innerHTML += `<button class="option-btn" onclick="checkAnswer(${i})">${opt}</button>`; }); sessionState.timeLeft = currentRoom.timer; document.getElementById('timer-text').innerText = sessionState.timeLeft + 's'; document.getElementById('timer-bar').style.width = '100%'; clearInterval(sessionState.timerInterval); sessionState.timerInterval = setInterval(() => { sessionState.timeLeft--; document.getElementById('timer-text').innerText = sessionState.timeLeft + 's'; document.getElementById('timer-bar').style.width = ((sessionState.timeLeft / currentRoom.timer) * 100) + '%'; if (sessionState.timeLeft <= 0) recordAnswer(-1); }, 1000); }
+    function checkAnswer(idx) { clearInterval(sessionState.timerInterval); recordAnswer(idx); }
+    function recordAnswer(idx) { const q = currentRoom.questions[sessionState.currentQuestionIndex]; const isC = (idx === q.correct); if (isC) sessionState.score++; sessionState.userAnswers.push({ questionText: q.text, selectedText: idx !== -1 ? q.options[idx] : "Tiempo agotado", correctText: q.options[q.correct], isCorrect: isC }); sessionState.currentQuestionIndex++; loadQuestion(); }
+
+    // --- FUNCIÓN DE ANIMACIÓN DE NÚMEROS ESTILO VIDEOJUEGO ---
+    function animateValue(obj, start, end, duration) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            // Curva ease-out: El contador empieza rápido y frena suavemente hacia el final
+            const easeOutProgress = 1 - Math.pow(1 - progress, 3);
+            obj.innerHTML = Math.floor(easeOutProgress * (end - start) + start) + '%';
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+
+    // --- LÓGICA DE FIN DE JUEGO (REDISEÑADA PARA EFECTOS DE TIEMPO) ---
+    function endGame() {
+        clearInterval(sessionState.timerInterval);
+        showView('results-view');
+
+        document.getElementById('result-student-name').innerText = `Alumno: ${sessionState.playerName}`;
+
+        const totalQ = currentRoom.questions.length;
+        const percentage = Math.round((sessionState.score / totalQ) * 100);
+        
+        // 1. Preparar la vista (Poner porcentaje en 0 y ocultar todo)
+        const scoreElement = document.getElementById('final-score-percent');
+        scoreElement.innerText = '0%';
+        
+        const rankContainer = document.getElementById('res-step-rank');
+        rankContainer.classList.remove('show-rank');
+        rankContainer.style.opacity = '0'; 
+
+        // 2. Definir estilos, letra y música del Rango
+        let rankTitle = ""; let rankClassAudio = ""; let rankColor = "";
+        if (percentage === 100) {
+            rankTitle = "P"; rankClassAudio = "music-rank-p"; rankColor = "#d946ef"; // Fucsia/Morado para P
+        } else if (percentage >= 75) {
+            rankTitle = "A"; rankClassAudio = "music-rank-a"; rankColor = "#34d399"; // Verde esmeralda para A
+        } else if (percentage >= 40) {
+            rankTitle = "B"; rankClassAudio = "music-rank-b"; rankColor = "#fbbf24"; // Amarillo dorado para B
+        } else {
+            rankTitle = "D"; rankClassAudio = "music-rank-d"; rankColor = "#f87171"; // Rojo para D
+        }
+        
+        const rankElement = document.getElementById('final-rank-title');
+        rankElement.innerText = rankTitle;
+        rankElement.style.color = rankColor;
+        // Brillo especial para el rango
+        rankElement.style.textShadow = `0 0 25px ${rankColor}99, 0 0 10px ${rankColor}`;
+
+        // 3. Generar la tabla
+        const tableBody = document.getElementById('results-table-body');
+        tableBody.innerHTML = '';
+        sessionState.userAnswers.forEach((ans) => {
+            const statusBadge = ans.isCorrect 
+                ? `<span class="badge-correct"><i class="fa-solid fa-check"></i> Correcta</span>` 
+                : `<span class="badge-incorrect"><i class="fa-solid fa-xmark"></i> Incorrecta</span>`;
+            tableBody.innerHTML += `
+                <tr><td><strong>${ans.questionText}</strong></td><td>${ans.selectedText}</td><td>${ans.correctText}</td><td>${statusBadge}</td></tr>`;
+        });
+
+        // 4. Limpiar clases visuales de los pasos base
+        for (let i = 1; i <= 6; i++) {
+            const el = document.getElementById(`res-step-${i}`);
+            if (el) el.classList.remove('visible');
+        }
+
+        // 5. ¡PLAY MUSIC INMEDIATAMENTE! (Un segundo antes de mostrar)
+        if (rankClassAudio) {
+            const rankMusic = document.getElementById(rankClassAudio);
+            if (rankMusic) {
+                rankMusic.currentTime = 0;
+                rankMusic.play().catch(e => console.log("Audio de rango bloqueado", e));
+            }
+        }
+
+        // 6. Arrancar la secuencia de animación visual 1 segundo (1000ms) después de la música
+        window.resultsAnimationTimeout = setTimeout(() => {
+            
+            // Aparecen los elementos en orden rápido
+            for (let i = 1; i <= 6; i++) {
+                setTimeout(() => {
+                    const el = document.getElementById(`res-step-${i}`);
+                    if (el) el.classList.add('visible');
+                    
+                    // Cuando aparece la sección del porcentaje (paso 3), activar contador animado
+                    if (i === 3) {
+                        animateValue(scoreElement, 0, percentage, 1400); // El contador dura 1.4s
+                    }
+                }, 300 * i);
+            }
+
+            // Al final de toda la secuencia base (2.2 segundos después del inicio visual), explota el Rango
+            setTimeout(() => {
+                rankContainer.classList.add('show-rank');
+            }, 2200);
+
+        }, 1000); // <- Aquí está el retraso de 1 segundo de "suspenso" respecto a la música
+    }
+</script>
+
+</body>
+</html>
