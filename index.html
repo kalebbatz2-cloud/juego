@@ -86,7 +86,7 @@
 
         .players-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 15px;
             width: 100%;
             max-height: 320px;
@@ -135,7 +135,7 @@
         
         .results-container { text-align: center; max-width: 800px; margin: 0 auto; width: 100%; }
         .results-table-wrapper {
-            max-height: 180px; overflow-y: auto; margin: 15px 0;
+            max-height: 220px; overflow-y: auto; margin: 15px 0;
             border: 1px solid #334155; border-radius: 10px; text-align: left;
         }
         table { width: 100%; border-collapse: collapse; font-size: 15px; }
@@ -158,11 +158,11 @@
 
         /* MARCOS Y RANGOS */
         .rank-presentation-area {
-            position: relative; width: 220px; height: 220px; margin: 10px auto;
+            position: relative; width: 200px; height: 200px; margin: 10px auto;
             display: flex; justify-content: center; align-items: center;
         }
         .rank-frame-box {
-            width: 190px; height: 190px; display: flex; justify-content: center; align-items: center;
+            width: 180px; height: 180px; display: flex; justify-content: center; align-items: center;
             position: relative; opacity: 0; transform: scale(0.2);
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -173,7 +173,7 @@
         .show-frame { opacity: 1 !important; transform: scale(1) !important; }
 
         .rank-letter-display {
-            font-size: 110px; font-weight: 900; font-family: 'Comfortaa', cursive;
+            font-size: 100px; font-weight: 900; font-family: 'Comfortaa', cursive;
             line-height: 1; position: absolute; opacity: 0; z-index: 5;
         }
 
@@ -331,7 +331,7 @@
     <!-- PANEL DE MONITOREO DEL ANFITRIÓN (DURANTE LA PRUEBA) -->
     <div id="host-monitor-view" class="content-area hidden">
         <h2 class="slide-title"><i class="fa-solid fa-chart-line"></i> Progreso en Tiempo Real</h2>
-        <p style="color: #94a3b8; margin-bottom: 15px; text-align: center;">Monitoreo equitativo del avance individual de los estudiantes.</p>
+        <p style="color: #94a3b8; margin-bottom: 15px; text-align: center;">Avance individual de cada estudiante:</p>
         
         <div class="players-grid" id="host-progress-grid" style="max-height: 380px;"></div>
 
@@ -340,16 +340,16 @@
         </div>
     </div>
 
-    <!-- PANTALLA FINAL EXCLUSIVA DEL ANFITRIÓN (SIN ESTADÍSTICAS) -->
+    <!-- PANTALLA FINAL EXCLUSIVA DEL ANFITRIÓN (SOLO JUGADORES Y SUS RESPUESTAS COMPLETADAS) -->
     <div id="host-finished-view" class="content-area hidden" style="text-align: center;">
-        <i class="fa-solid fa-party-horn" style="font-size: 70px; color: #818cf8; margin-bottom: 20px;"></i>
-        <h2 class="slide-title" style="color: #34d399; font-size: 40px;">¡Felicidades, han terminado!</h2>
-        <div class="config-card" style="max-width: 550px; margin: 20px auto;">
-            <p style="font-size: 20px; color: #cbd5e1; line-height: 1.5;">
-                Has finalizado la evaluación. Los alumnos están revisando sus resultados individuales.
-            </p>
-        </div>
-        <button class="btn btn-danger" onclick="closeRoomAndExit()"><i class="fa-solid fa-right-from-bracket"></i> Salir y Cerrar Sala</button>
+        <h2 class="slide-title" style="color: #34d399; font-size: 36px; margin-bottom: 10px;">¡Felicidades, han terminado!</h2>
+        <p style="color: #cbd5e1; margin-bottom: 15px;">Resumen de avance de los alumnos en la sala:</p>
+        
+        <div class="players-grid" id="host-final-summary-grid" style="max-height: 340px;"></div>
+
+        <button class="btn btn-danger" onclick="closeRoomAndExit()" style="margin-top: 15px;">
+            <i class="fa-solid fa-right-from-bracket"></i> Salir y Cerrar Sala
+        </button>
     </div>
 
     <!-- VISTA DE PREGUNTAS / JUEGO (SOLO ALUMNOS) -->
@@ -371,12 +371,12 @@
         <h2 class="slide-title" style="color: #34d399;">¡Qué bien, has terminado!</h2>
         <div class="config-card" style="max-width: 550px; margin: 0 auto;">
             <p style="font-size: 20px; line-height: 1.5; color: #cbd5e1;">
-                Sé paciente y espera a tus compañeros. <br><strong>El anfitrión te evaluará luego.</strong>
+                Sé paciente y espera a tus compañeros. <br><strong>El anfitrión finalizará la prueba pronto.</strong>
             </p>
         </div>
     </div>
 
-    <!-- VISTA RESULTADOS DE ALUMNOS (SECUENCIA DE 16s Y ESTADÍSTICAS PERSONALES) -->
+    <!-- VISTA RESULTADOS DE ALUMNOS (DESGLOSE COMPLETO) -->
     <div id="results-view" class="content-area hidden">
         <div class="results-container">
             <h2 class="slide-title" id="res-step-1">¡Tu Calificación Final!</h2>
@@ -387,7 +387,7 @@
             </div>
             <p style="font-size: 14px; color: #94a3b8; margin-bottom: 10px;" id="results-timer-text">Calculando tu Rango Final en 16s...</p>
             
-            <div style="display: flex; justify-content: center; gap: 30px; align-items: center; margin-bottom: 15px; min-height: 220px;">
+            <div style="display: flex; justify-content: center; gap: 30px; align-items: center; margin-bottom: 15px; min-height: 200px;">
                 <div id="res-step-3" style="background: #0f172a; padding: 15px 25px; border-radius: 16px; border: 1px solid #334155; text-align: center;">
                     <span style="color: #94a3b8; font-size: 14px; display: block; margin-bottom: 4px;">Aciertos:</span>
                     <h1 id="final-score-percent" style="font-size: 42px; color: #34d399; font-family: 'Comfortaa', cursive;">0%</h1>
@@ -477,11 +477,14 @@
         if (rankingMusic) { rankingMusic.pause(); rankingMusic.currentTime = 0; }
 
         if (viewId === 'create-config-view' || viewId === 'question-builder-view') {
-            menuMusic.pause(); gameplayMusic.pause(); bgMusic.play().catch(() => {});
+            menuMusic.pause(); gameplayMusic.pause(); 
+            bgMusic.play().catch(() => {});
         } else if (viewId === 'join-view' || viewId === 'lobby-view' || viewId === 'home-view' || viewId === 'host-finished-view') {
-            bgMusic.pause(); gameplayMusic.pause(); menuMusic.play().catch(() => {});
+            bgMusic.pause(); gameplayMusic.pause(); 
+            menuMusic.play().catch(() => {});
         } else if (viewId === 'game-view' || viewId === 'host-monitor-view' || viewId === 'student-waiting-view') {
-            bgMusic.pause(); menuMusic.pause(); gameplayMusic.play().catch(() => {});
+            bgMusic.pause(); menuMusic.pause(); 
+            gameplayMusic.play().catch(() => {});
         } else {
             bgMusic.pause(); menuMusic.pause(); gameplayMusic.pause();
         }
@@ -625,7 +628,6 @@
         roomListenerRef.on('value', (snap) => {
             const data = snap.val();
             if (!data) {
-                // La sala fue eliminada por el anfitrión
                 if (!sessionState.isHost) {
                     alert("El anfitrión ha cerrado la sala.");
                     exitToHome();
@@ -639,8 +641,6 @@
                     showHostMonitorScreen(data.players || {});
                 } else if (!sessionState.gameStarted) {
                     startPlayerGame();
-                } else {
-                    // Actualizar solo lista si es necesario
                 }
                 return;
             }
@@ -648,7 +648,7 @@
             // ESTADO DE JUEGO FINALIZADO
             if (data.status === "finished") {
                 if (sessionState.isHost) {
-                    showView('host-finished-view');
+                    showHostFinalSummary(data.players || {});
                 } else if (!sessionState.gameFinished) {
                     endPlayerGame();
                 }
@@ -679,6 +679,12 @@
 
     function hostStartGame() {
         if (!sessionState.isHost) return;
+        // Reproducir música tras interacción explícita del anfitrión
+        const gameplayMusic = document.getElementById('gameplay-music');
+        if (gameplayMusic) {
+            gameplayMusic.currentTime = 0;
+            gameplayMusic.play().catch(() => {});
+        }
         db.ref(`rooms/${currentRoom.code}/status`).set("playing");
     }
 
@@ -701,7 +707,10 @@
         Object.values(players).forEach(p => {
             const isDone = p.status === "finished";
             const doneClass = isDone ? "finished" : "";
-            const progressText = isDone ? `<span style="color:#34d399; font-weight:700;">¡Completado!</span>` : `Pregunta ${p.currentQuestion || 0} / ${totalQ}`;
+            const answeredCount = p.currentQuestion || 0;
+            const progressText = isDone 
+                ? `<span style="color:#34d399; font-weight:700;">${totalQ}/${totalQ} (Listo)</span>` 
+                : `${answeredCount}/${totalQ} respondidas`;
 
             grid.innerHTML += `
                 <div class="player-card-host ${doneClass}">
@@ -709,6 +718,26 @@
                     <div class="player-info-host">
                         <strong>${p.name}</strong>
                         <span>${progressText}</span>
+                    </div>
+                </div>`;
+        });
+    }
+
+    /* --- PANTALLA FINAL DEL ANFITRIÓN (SIN ESTADÍSTICAS) --- */
+    function showHostFinalSummary(players) {
+        showView('host-finished-view');
+        const grid = document.getElementById('host-final-summary-grid');
+        grid.innerHTML = '';
+        const totalQ = currentRoom.questions.length;
+
+        Object.values(players).forEach(p => {
+            const answeredCount = p.currentQuestion || 0;
+            grid.innerHTML += `
+                <div class="player-card-host finished">
+                    <img src="${p.avatarUrl}" alt="${p.name}">
+                    <div class="player-info-host">
+                        <strong>${p.name}</strong>
+                        <span style="color:#34d399; font-weight:700; font-size: 16px;">${answeredCount}/${totalQ}</span>
                     </div>
                 </div>`;
         });
@@ -732,6 +761,13 @@
         sessionState.currentQuestionIndex = 0; 
         sessionState.score = 0; 
         sessionState.userAnswers = []; 
+        
+        const gameplayMusic = document.getElementById('gameplay-music');
+        if (gameplayMusic) {
+            gameplayMusic.currentTime = 0;
+            gameplayMusic.play().catch(() => {});
+        }
+
         showView('game-view'); 
         loadQuestion(); 
     }
@@ -749,11 +785,6 @@
 
         const q = currentRoom.questions[sessionState.currentQuestionIndex]; 
         
-        // Notificar al anfitrión del avance sin reiniciar la vista local
-        db.ref(`rooms/${currentRoom.code}/players/${sessionState.playerId}`).update({
-            currentQuestion: sessionState.currentQuestionIndex + 1
-        });
-
         document.getElementById('question-counter').innerText = `Pregunta ${sessionState.currentQuestionIndex + 1} de ${currentRoom.questions.length}`; 
         document.getElementById('question-title').innerText = q.text; 
         const optCont = document.getElementById('options-container'); 
@@ -784,13 +815,21 @@
         const q = currentRoom.questions[sessionState.currentQuestionIndex]; 
         const isC = (idx === q.correct); 
         if (isC) sessionState.score++; 
+        
         sessionState.userAnswers.push({ 
             questionText: q.text, 
             selectedText: idx !== -1 ? q.options[idx] : "Tiempo agotado", 
             correctText: q.options[q.correct], 
             isCorrect: isC 
         }); 
-        sessionState.currentQuestionIndex++; 
+
+        sessionState.currentQuestionIndex++;
+
+        // Actualizar progreso
+        db.ref(`rooms/${currentRoom.code}/players/${sessionState.playerId}`).update({
+            currentQuestion: sessionState.currentQuestionIndex
+        });
+
         loadQuestion(); 
     }
 
@@ -811,16 +850,20 @@
         const totalQ = currentRoom.questions.length || 1;
         const percentage = Math.round((sessionState.score / totalQ) * 100);
 
-        // Renderizar tabla personal de respuestas
+        // Renderizar tabla personal de respuestas garantizada
         const tableBody = document.getElementById('results-table-body');
         tableBody.innerHTML = '';
         
-        sessionState.userAnswers.forEach((ans) => {
-            const statusBadge = ans.isCorrect 
-                ? `<span class="badge-correct"><i class="fa-solid fa-check"></i> Correcta</span>` 
-                : `<span class="badge-incorrect"><i class="fa-solid fa-xmark"></i> Incorrecta</span>`;
-            tableBody.innerHTML += `<tr><td><strong>${ans.questionText}</strong></td><td>${ans.selectedText}</td><td>${ans.correctText}</td><td>${statusBadge}</td></tr>`;
-        });
+        if (sessionState.userAnswers.length > 0) {
+            sessionState.userAnswers.forEach((ans) => {
+                const statusBadge = ans.isCorrect 
+                    ? `<span class="badge-correct"><i class="fa-solid fa-check"></i> Correcta</span>` 
+                    : `<span class="badge-incorrect"><i class="fa-solid fa-xmark"></i> Incorrecta</span>`;
+                tableBody.innerHTML += `<tr><td><strong>${ans.questionText}</strong></td><td>${ans.selectedText}</td><td>${ans.correctText}</td><td>${statusBadge}</td></tr>`;
+            });
+        } else {
+            tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#94a3b8;">No respondiste ninguna pregunta a tiempo.</td></tr>`;
+        }
 
         document.getElementById('res-step-4').style.opacity = '0';
         animateCounter('final-score-percent', percentage, 3000);
