@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¿Qué aprendimos? - Modo Classroom Independiente</title>
+    <title>¿Qué aprendimos? - Por Unkas Batz</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Afacad+Flux:wght@400;600;700&display=swap" rel="stylesheet">
@@ -14,10 +14,12 @@
             background-color: #0f172a;
             font-family: 'Afacad Flux', sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             color: #f8fafc;
+            padding: 20px;
         }
         .slide-container {
             background-color: #1e293b;
@@ -37,16 +39,12 @@
         h1, h2, h3 { font-family: 'Comfortaa', cursive; color: #f8fafc; }
         .slide-title { font-size: 32px; margin-bottom: 20px; text-align: center; color: #a5b4fc; }
         p, label, input, button, select { font-size: 18px; }
+        
+        /* Botones */
         .btn {
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
-            color: #ffffff;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            background: linear-gradient(135deg, #6366f1, #4f46e5); color: #ffffff; border: none;
+            padding: 14px 28px; border-radius: 12px; cursor: pointer; font-weight: 600;
+            transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4); }
         .btn-secondary { background: #334155; box-shadow: none; }
@@ -55,17 +53,12 @@
         .btn-danger:hover { background: linear-gradient(135deg, #dc2626, #b91c1c); }
 
         input[type="text"], input[type="number"], select {
-            background-color: #0f172a;
-            border: 2px solid #475569;
-            color: #fff;
-            padding: 12px 18px;
-            border-radius: 10px;
-            width: 100%;
-            margin-top: 8px;
-            margin-bottom: 20px;
+            background-color: #0f172a; border: 2px solid #475569; color: #fff;
+            padding: 12px 18px; border-radius: 10px; width: 100%; margin-top: 8px; margin-bottom: 20px;
         }
         input:focus, select:focus { border-color: #6366f1; outline: none; }
         .hidden { display: none !important; }
+        
         .content-area {
             flex-grow: 1; display: flex; flex-direction: column;
             justify-content: center; align-items: center; width: 100%;
@@ -74,10 +67,10 @@
         #home-view h1 { font-size: 56px; margin-bottom: 15px; color: #818cf8; }
         #home-view p { font-size: 20px; color: #94a3b8; margin-bottom: 40px; }
         .home-buttons { display: flex; gap: 25px; justify-content: center; flex-wrap: wrap; }
+        
         .config-card {
             background-color: #0f172a; border: 1px solid #334155;
-            border-radius: 14px; padding: 25px; margin-bottom: 20px;
-            width: 100%; max-width: 600px;
+            border-radius: 14px; padding: 25px; margin-bottom: 20px; width: 100%; max-width: 600px;
         }
         .room-code-display {
             font-size: 48px; font-weight: 700; color: #34d399;
@@ -85,174 +78,86 @@
         }
 
         .players-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 15px;
-            width: 100%;
-            max-height: 320px;
-            overflow-y: auto;
-            margin: 15px 0;
-            padding: 10px;
-            background-color: #0f172a;
-            border-radius: 12px;
-            border: 1px solid #334155;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px; width: 100%; max-height: 320px; overflow-y: auto; margin: 15px 0;
+            padding: 10px; background-color: #0f172a; border-radius: 12px; border: 1px solid #334155;
         }
         .player-card-host {
-            background: #1e293b;
-            border: 1px solid #475569;
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.3s;
+            background: #1e293b; border: 1px solid #475569; border-radius: 12px;
+            padding: 12px; display: flex; align-items: center; gap: 12px; transition: all 0.3s;
         }
-        .player-card-host.finished {
-            border-color: #34d399;
-            background: rgba(52, 211, 153, 0.1);
-        }
-        .player-card-host img {
-            width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
-        }
+        .player-card-host.finished { border-color: #34d399; background: rgba(52, 211, 153, 0.1); }
+        .player-card-host img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
         .player-info-host { text-align: left; overflow: hidden; flex-grow: 1; }
         .player-info-host strong { display: block; font-size: 16px; color: #f8fafc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .player-info-host span { font-size: 14px; color: #a5b4fc; }
 
-        /* --- TEST REDISEÑADO --- */
+        /* --- TEST (PREGUNTAS) --- */
         .quiz-container { width: 100%; max-width: 820px; margin: 0 auto; }
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 5px; }
+        .badge-counter { background: rgba(99, 102, 241, 0.15); border: 1px solid #6366f1; color: #a5b4fc; padding: 6px 14px; border-radius: 20px; font-size: 15px; font-weight: 700; }
+        .badge-timer { background: rgba(52, 211, 153, 0.15); border: 1px solid #34d399; color: #34d399; padding: 6px 14px; border-radius: 20px; font-size: 15px; font-weight: 700; transition: all 0.3s; }
+        .badge-timer.danger { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #f87171; animation: pulseTimer 0.8s infinite alternate; }
         
-        .quiz-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding: 0 5px;
-        }
+        @keyframes pulseTimer { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
 
-        .badge-counter {
-            background: rgba(99, 102, 241, 0.15);
-            border: 1px solid #6366f1;
-            color: #a5b4fc;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 15px;
-            font-weight: 700;
-        }
-
-        .badge-timer {
-            background: rgba(52, 211, 153, 0.15);
-            border: 1px solid #34d399;
-            color: #34d399;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 15px;
-            font-weight: 700;
-            transition: all 0.3s;
-        }
-
-        .badge-timer.danger {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: #ef4444;
-            color: #f87171;
-            animation: pulseTimer 0.8s infinite alternate;
-        }
-
-        @keyframes pulseTimer {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.05); }
-        }
-
-        .timer-bar-container {
-            width: 100%; height: 8px; background-color: #0f172a;
-            border-radius: 10px; margin-bottom: 25px; overflow: hidden;
-            border: 1px solid #334155;
-        }
-        .timer-bar { 
-            height: 100%; 
-            background: linear-gradient(90deg, #34d399, #818cf8); 
-            width: 100%; 
-            transition: width 1s linear, background-color 0.3s; 
-            border-radius: 10px;
-        }
+        .timer-bar-container { width: 100%; height: 8px; background-color: #0f172a; border-radius: 10px; margin-bottom: 25px; overflow: hidden; border: 1px solid #334155; }
+        .timer-bar { height: 100%; background: linear-gradient(90deg, #34d399, #818cf8); width: 100%; transition: width 1s linear, background-color 0.3s; border-radius: 10px; }
 
         .question-card-wrapper {
-            background: linear-gradient(145deg, #0f172a, #182238);
-            border: 1px solid #334155;
-            border-radius: 18px;
-            padding: 30px 25px;
-            margin-bottom: 25px;
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 10px 25px rgba(0, 0, 0, 0.3);
-            text-align: center;
+            background: linear-gradient(145deg, #0f172a, #182238); border: 1px solid #334155;
+            border-radius: 18px; padding: 30px 25px; margin-bottom: 25px;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 10px 25px rgba(0, 0, 0, 0.3); text-align: center;
         }
-
-        .question-text { 
-            font-size: 24px; 
-            font-weight: 700; 
-            color: #f8fafc; 
-            line-height: 1.4;
-        }
+        .question-text { font-size: 24px; font-weight: 700; color: #f8fafc; line-height: 1.4; }
 
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         
+        /* Colores dinámicos para las opciones de respuesta */
         .option-btn {
-            background: #0f172a; 
-            border: 2px solid #334155; 
-            color: #f1f5f9;
-            padding: 18px 20px; 
-            border-radius: 14px; 
-            font-size: 18px; 
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-            text-align: left; 
-            font-family: 'Afacad Flux', sans-serif;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            background: #0f172a; border: 2px solid #334155; color: #f1f5f9;
+            padding: 18px 20px; border-radius: 14px; font-size: 18px; cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); text-align: left; 
+            font-family: 'Afacad Flux', sans-serif; display: flex; align-items: center;
+            gap: 14px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
-        
         .option-badge {
-            background-color: #1e293b;
-            color: #818cf8;
-            font-weight: 700;
-            font-size: 15px;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #475569;
-            flex-shrink: 0;
-            transition: all 0.2s;
+            background-color: #1e293b; color: #818cf8; font-weight: 700; font-size: 15px;
+            width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center;
+            justify-content: center; border: 1px solid #475569; flex-shrink: 0; transition: all 0.2s;
         }
 
-        .option-btn:hover { 
-            background-color: #1e293b; 
-            border-color: #6366f1; 
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
-        }
-
-        .option-btn:hover .option-badge {
-            background-color: #6366f1;
-            color: #ffffff;
-            border-color: #818cf8;
-        }
+        /* Opción A (Rojo) */
+        .opt-color-0 { border-color: #ef4444; } 
+        .opt-color-0:hover { background-color: rgba(239, 68, 68, 0.1); border-color: #ef4444; transform: translateY(-3px); } 
+        .opt-color-0:hover .option-badge { background-color: #ef4444; color: #fff; border-color: #ef4444; }
         
-        /* RESULTADOS Y TABLA */
+        /* Opción B (Azul) */
+        .opt-color-1 { border-color: #3b82f6; } 
+        .opt-color-1:hover { background-color: rgba(59, 130, 246, 0.1); border-color: #3b82f6; transform: translateY(-3px); } 
+        .opt-color-1:hover .option-badge { background-color: #3b82f6; color: #fff; border-color: #3b82f6; }
+        
+        /* Opción C (Amarillo) */
+        .opt-color-2 { border-color: #f59e0b; } 
+        .opt-color-2:hover { background-color: rgba(245, 158, 11, 0.1); border-color: #f59e0b; transform: translateY(-3px); } 
+        .opt-color-2:hover .option-badge { background-color: #f59e0b; color: #fff; border-color: #f59e0b; }
+        
+        /* Opción D (Verde) */
+        .opt-color-3 { border-color: #10b981; } 
+        .opt-color-3:hover { background-color: rgba(16, 185, 129, 0.1); border-color: #10b981; transform: translateY(-3px); } 
+        .opt-color-3:hover .option-badge { background-color: #10b981; color: #fff; border-color: #10b981; }
+        
+        /* TABLA DE RESULTADOS */
         .results-container { text-align: center; max-width: 800px; margin: 0 auto; width: 100%; }
-        .results-table-wrapper {
-            max-height: 200px; overflow-y: auto; margin: 10px 0;
-            border: 1px solid #334155; border-radius: 10px; text-align: left;
-        }
+        .results-table-wrapper { max-height: 200px; overflow-y: auto; margin: 10px 0; border: 1px solid #334155; border-radius: 10px; text-align: left; }
         table { width: 100%; border-collapse: collapse; font-size: 15px; }
         th, td { padding: 10px 15px; border-bottom: 1px solid #334155; }
-        th { background-color: #0f172a; color: #a5b4fc; position: sticky; top: 0; }
+        th { background-color: #0f172a; color: #a5b4fc; position: sticky; top: 0; z-index: 10; }
         td { color: #cbd5e1; }
         .badge-incorrect { color: #f87171; font-weight: 600; }
         .badge-correct { color: #34d399; font-weight: 600; }
         
+        /* AVATARES */
         .avatar-section-title { font-size: 15px; color: #a5b4fc; margin: 12px 0 8px 0; text-align: left; font-weight: 600; }
         .avatars-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px; }
         .avatar-option {
@@ -264,13 +169,62 @@
         .avatar-option:hover { border-color: #818cf8; background-color: #1e293b; }
         .avatar-option.selected { border-color: #34d399; background-color: rgba(52, 211, 153, 0.15); }
 
+        /* EFECTOS DE AVATAR EN RESULTADOS */
+        .avatar-effect-wrapper {
+            position: relative; width: 80px; height: 80px; margin: 0 auto 10px auto; display: none;
+        }
+        .avatar-effect-wrapper img {
+            width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+            position: relative; z-index: 2; border: 3px solid #334155; background: #0f172a;
+        }
+        
+        /* Rango D: Nube de Lluvia */
+        .fx-d-rain::before {
+            content: '\f0c2'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            color: #475569; font-size: 40px; position: absolute; top: -30px; left: 20px; z-index: 3;
+        }
+        .fx-d-rain::after {
+            content: ''; position: absolute; top: 0; left: 25px; width: 30px; height: 60px;
+            background: repeating-linear-gradient(transparent, transparent 4px, #60a5fa 4px, #60a5fa 6px);
+            z-index: 1; animation: rainDrop 0.4s linear infinite; opacity: 0.6;
+        }
+        @keyframes rainDrop { 100% { background-position: 0 20px; } }
+
+        /* Rango B: Nubes Grises */
+        .fx-b-clouds::before, .fx-b-clouds::after {
+            content: '\f0c2'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: #64748b; font-size: 35px;
+            position: absolute; z-index: 3; animation: floatCloud 3s ease-in-out infinite alternate;
+        }
+        .fx-b-clouds::before { top: -15px; left: -20px; }
+        .fx-b-clouds::after { top: 30px; right: -25px; animation-delay: 1.5s; font-size: 25px; }
+        @keyframes floatCloud { 100% { transform: translateY(-8px); } }
+
+        /* Rango A: Luz Divina */
+        .fx-a-light img { border-color: #fde047; box-shadow: 0 0 20px rgba(253, 224, 71, 0.6); }
+        .fx-a-light::before {
+            content: ''; position: absolute; top: -100px; left: -50px; right: -50px; bottom: 0;
+            background: linear-gradient(to bottom, rgba(253, 224, 71, 0.4) 0%, transparent 100%);
+            clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%); z-index: 1; animation: shine 2s infinite alternate;
+        }
+        @keyframes shine { 100% { opacity: 0.5; } }
+
+        /* Rango P: Trono/Podio */
+        .fx-p-podium { animation: levitatePodium 2.5s ease-in-out infinite alternate; }
+        .fx-p-podium img { border-color: #38bdf8; box-shadow: 0 15px 25px rgba(0,0,0,0.5); }
+        .fx-p-podium::after {
+            content: '\f521'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: #fef08a;
+            font-size: 35px; position: absolute; bottom: -20px; left: 22px; z-index: 3;
+            text-shadow: 0 0 10px rgba(253, 224, 71, 0.8);
+        }
+        @keyframes levitatePodium { 0% { transform: translateY(0); } 100% { transform: translateY(-12px); } }
+
         /* MARCOS Y RANGOS */
         .rank-presentation-area {
-            position: relative; width: 160px; height: 160px; margin: 5px auto;
+            position: relative; width: 140px; height: 140px; margin: 5px auto;
             display: flex; justify-content: center; align-items: center;
         }
         .rank-frame-box {
-            width: 140px; height: 140px; display: flex; justify-content: center; align-items: center;
+            width: 120px; height: 120px; display: flex; justify-content: center; align-items: center;
             position: relative; opacity: 0; transform: scale(0.2);
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -281,7 +235,7 @@
         .show-frame { opacity: 1 !important; transform: scale(1) !important; }
 
         .rank-letter-display {
-            font-size: 80px; font-weight: 900; font-family: 'Comfortaa', cursive;
+            font-size: 70px; font-weight: 900; font-family: 'Comfortaa', cursive;
             line-height: 1; position: absolute; opacity: 0; z-index: 5;
         }
 
@@ -306,28 +260,24 @@
         }
 
         .anim-rank-a-firm { animation: firmSlamA 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        @keyframes firmSlamA {
-            0% { opacity: 0; transform: scale(3.5); }
-            100% { opacity: 1; transform: scale(1); }
-        }
+        @keyframes firmSlamA { 0% { opacity: 0; transform: scale(3.5); } 100% { opacity: 1; transform: scale(1); } }
 
         .anim-rank-p-epic { animation: epicSlamP 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.4) forwards; }
-        @keyframes epicSlamP {
-            0% { opacity: 0; transform: scale(4); filter: blur(8px); }
-            100% { opacity: 1; transform: scale(1); filter: blur(0px); }
-        }
+        @keyframes epicSlamP { 0% { opacity: 0; transform: scale(4); filter: blur(8px); } 100% { opacity: 1; transform: scale(1); filter: blur(0px); } }
 
         .sparkle-particle {
-            position: absolute; width: 10px; height: 10px;
-            background: #fef08a; border-radius: 50%;
-            box-shadow: 0 0 10px #fef08a; pointer-events: none;
-            animation: floatSparkle 1.2s ease-out forwards;
+            position: absolute; width: 10px; height: 10px; background: #fef08a; border-radius: 50%;
+            box-shadow: 0 0 10px #fef08a; pointer-events: none; animation: floatSparkle 1.2s ease-out forwards;
         }
-        @keyframes floatSparkle {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+        @keyframes floatSparkle { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
+        
+        /* FOOTER DE CRÉDITOS */
+        .footer-credits {
+            text-align: center; margin-top: 25px; font-size: 14px;
+            color: #64748b; font-family: 'Comfortaa', cursive;
         }
-     </style>
+        .footer-credits i { color: #818cf8; }
+    </style>
 </head>
 <body>
 
@@ -335,7 +285,7 @@
 <audio id="menu-music" loop><source src="Choosing%20the%20Toppings.mp3" type="audio/mpeg"></audio>
 <audio id="gameplay-music" loop><source src="Everybody's%20Favorite%20Subject%20-%20Baldi's%20Basics%20Classic%20Remastered%20Original%20Soundtrack.mp3" type="audio/mpeg"></audio>
 
-<!-- Temas de Rango independientes -->
+<!-- Temas de Rango -->
 <audio id="ranking-d-music"><source src="D%20Rank%20-%20Pizza%20Tower%20OST.mp3" type="audio/mpeg"></audio>
 <audio id="ranking-b-music"><source src="B%20Rank%20-%20Pizza%20Tower%20OST.mp3" type="audio/mpeg"></audio>
 <audio id="ranking-a-music"><source src="A%20Rank%20-%20Pizza%20Tower%20OST.mp3" type="audio/mpeg"></audio>
@@ -365,7 +315,7 @@
             <input type="number" id="config-max-players" value="10" min="1" max="50">
         </div>
         <div style="display: flex; justify-content: space-between; width: 100%; max-width: 600px;">
-            <button class="btn btn-secondary" onclick="showView('home-view')">Salir</button>
+            <button class="btn btn-secondary" onclick="exitToHome()">Salir</button>
             <button class="btn" onclick="acceptConfigAndStartBuilder()">Aceptar y Crear Preguntas</button>
         </div>
     </div>
@@ -391,7 +341,7 @@
         </div>
     </div>
 
-    <!-- UNIRSE A SALA (ALUMNO) -->
+    <!-- UNIRSE A SALA -->
     <div id="join-view" class="content-area hidden">
         <h2 class="slide-title" style="margin-bottom: 10px;">Unirse a una Sala</h2>
         <div class="config-card" style="text-align: left; max-width: 600px; padding: 20px; margin-bottom: 15px;">
@@ -399,6 +349,7 @@
             <input type="text" id="player-name" placeholder="Ej. Ana" style="margin-bottom: 12px; padding: 10px 14px;">
             <label style="font-size: 16px;">Código de Sala:</label>
             <input type="text" id="room-code-input" placeholder="Ej. 4892" style="text-transform: uppercase; margin-bottom: 12px; padding: 10px 14px;">
+            
             <div class="avatar-section-title">Elige tu Avatar Femenino:</div>
             <div class="avatars-grid">
                 <div class="avatar-option" onclick="selectAvatar('f1', 'https://api.dicebear.com/7.x/bottts/svg?seed=Pepperoni', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Pepperoni" alt="F1"><span>Valkyrie</span></div>
@@ -407,6 +358,7 @@
                 <div class="avatar-option" onclick="selectAvatar('f4', 'https://api.dicebear.com/7.x/bottts/svg?seed=Cherry', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Cherry" alt="F4"><span>Cyber</span></div>
                 <div class="avatar-option" onclick="selectAvatar('f5', 'https://api.dicebear.com/7.x/bottts/svg?seed=Truffle', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Truffle" alt="F5"><span>Queen</span></div>
             </div>
+            
             <div class="avatar-section-title">Elige tu Avatar Masculino:</div>
             <div class="avatars-grid" style="margin-bottom: 0;">
                 <div class="avatar-option" onclick="selectAvatar('m1', 'https://api.dicebear.com/7.x/bottts/svg?seed=Brawler', this)"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Brawler" alt="M1"><span>Brawler</span></div>
@@ -417,12 +369,12 @@
             </div>
         </div>
         <div style="display: flex; gap: 15px; justify-content: center;">
-            <button class="btn btn-secondary" onclick="showView('home-view')">Volver</button>
+            <button class="btn btn-secondary" onclick="exitToHome()">Volver</button>
             <button class="btn" onclick="joinRoom()">Entrar</button>
         </div>
     </div>
 
-    <!-- LOBBY DE ESPERA DE SALA -->
+    <!-- LOBBY DE ESPERA -->
     <div id="lobby-view" class="content-area hidden">
         <h2 class="slide-title" id="lobby-title">Sala de Espera</h2>
         <div class="config-card" style="text-align: center;">
@@ -441,31 +393,27 @@
         </div>
     </div>
 
-    <!-- PANEL DE MONITOREO DEL ANFITRIÓN -->
+    <!-- MONITOR DEL ANFITRIÓN -->
     <div id="host-monitor-view" class="content-area hidden">
         <h2 class="slide-title"><i class="fa-solid fa-chart-line"></i> Progreso en Tiempo Real</h2>
         <p style="color: #94a3b8; margin-bottom: 15px; text-align: center;">Avance individual de cada estudiante:</p>
-        
         <div class="players-grid" id="host-progress-grid" style="max-height: 380px;"></div>
-
         <div style="display: flex; justify-content: center; gap: 15px; margin-top: 15px; width: 100%;">
-            <button class="btn btn-danger" onclick="hostEndGame()"><i class="fa-solid fa-flag-checkered"></i> Finalizar Prueba para Todos</button>
+            <button class="btn btn-danger" onclick="hostEndGame()"><i class="fa-solid fa-flag-checkered"></i> Finalizar Prueba</button>
         </div>
     </div>
 
-    <!-- PANTALLA FINAL EXCLUSIVA DEL ANFITRIÓN -->
+    <!-- RESUMEN ANFITRIÓN -->
     <div id="host-finished-view" class="content-area hidden" style="text-align: center;">
-        <h2 class="slide-title" style="color: #34d399; font-size: 36px; margin-bottom: 10px;">¡Felicidades, han terminado!</h2>
-        <p style="color: #cbd5e1; margin-bottom: 15px;">Resumen de avance de los alumnos en la sala:</p>
-        
+        <h2 class="slide-title" style="color: #34d399; font-size: 36px; margin-bottom: 10px;">¡Prueba Finalizada!</h2>
+        <p style="color: #cbd5e1; margin-bottom: 15px;">Resumen de avance:</p>
         <div class="players-grid" id="host-final-summary-grid" style="max-height: 340px;"></div>
-
         <button class="btn btn-danger" onclick="closeRoomAndExit()" style="margin-top: 15px;">
             <i class="fa-solid fa-right-from-bracket"></i> Salir y Cerrar Sala
         </button>
     </div>
 
-    <!-- VISTA DE PREGUNTAS / JUEGO -->
+    <!-- JUEGO ALUMNO -->
     <div id="game-view" class="content-area hidden">
         <div class="quiz-container">
             <div class="quiz-header">
@@ -483,7 +431,7 @@
         </div>
     </div>
 
-    <!-- SALA DE ESPERA DEL ALUMNO TRAS TERMINAR -->
+    <!-- ESPERA ALUMNO -->
     <div id="student-waiting-view" class="content-area hidden" style="text-align: center;">
         <i class="fa-solid fa-circle-check" style="font-size: 70px; color: #34d399; margin-bottom: 20px;"></i>
         <h2 class="slide-title" style="color: #34d399;">¡Qué bien, has terminado!</h2>
@@ -494,13 +442,12 @@
         </div>
     </div>
 
-    <!-- VISTA RESULTADOS DE ALUMNOS (REORGANIZADA) -->
+    <!-- RESULTADOS ALUMNO -->
     <div id="results-view" class="content-area hidden">
         <div class="results-container">
             <h2 class="slide-title" style="margin-bottom: 8px;">¡Resultados de la Evaluación!</h2>
             <p style="color: #818cf8; font-weight: 600; margin-bottom: 12px;"><span id="result-student-name"></span></p>
 
-            <!-- ORDEN 1: Preguntas con su respectivo indicador de correcto o no -->
             <div style="margin-bottom: 12px; text-align: left;">
                 <p style="color: #cbd5e1; font-size: 14px; margin-bottom: 4px;">1. Detalle de tus respuestas:</p>
                 <div class="results-table-wrapper" style="width: 100%;">
@@ -509,7 +456,7 @@
                             <tr>
                                 <th>Pregunta</th>
                                 <th>Tu Respuesta</th>
-                                <th>Respuesta Correcta</th>
+                                <th>Correcta</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
@@ -518,9 +465,8 @@
                 </div>
             </div>
 
-            <!-- ORDEN 2: Porcentaje de aciertos -->
-            <div style="margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 20px;">
-                <div style="background: #0f172a; padding: 10px 20px; border-radius: 12px; border: 1px solid #334155; text-align: center; display: inline-block;">
+            <div style="margin-bottom: 12px; display: flex; align-items: center; justify-content: center;">
+                <div style="background: #0f172a; padding: 10px 20px; border-radius: 12px; border: 1px solid #334155; text-align: center;">
                     <span style="color: #94a3b8; font-size: 13px; display: block;">2. Porcentaje de Aciertos:</span>
                     <h1 id="final-score-percent" style="font-size: 32px; color: #34d399; font-family: 'Comfortaa', cursive;">0%</h1>
                 </div>
@@ -531,9 +477,14 @@
             </div>
             <p style="font-size: 13px; color: #94a3b8; margin-bottom: 8px;" id="results-timer-text">Calculando tu Rango Final en 16s...</p>
             
-            <!-- ORDEN 3: El Rango -->
             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 10px;">
-                <span style="color: #94a3b8; font-size: 13px; display: block; margin-bottom: 4px;">3. Rango Obtenido:</span>
+                <span style="color: #94a3b8; font-size: 13px; display: block; margin-bottom: 8px;">3. Rango Obtenido:</span>
+                
+                <!-- Contenedor del Avatar con Efectos -->
+                <div id="avatar-result-display" class="avatar-effect-wrapper">
+                    <img id="result-avatar-img" src="" alt="Avatar">
+                </div>
+
                 <div class="rank-presentation-area" id="rank-presentation-area">
                     <div id="rank-frame-box" class="rank-frame-box">
                         <div class="rank-letter-display" id="final-rank-title">-</div>
@@ -547,6 +498,11 @@
         </div>
     </div>
 
+</div>
+
+<!-- CRÉDITOS FOOTER -->
+<div class="footer-credits">
+    Creado por <strong>Unkas Batz</strong> con ayuda de la plataforma <i class="fa-solid fa-sparkles"></i> Gemini
 </div>
 
 <!-- FIREBASE -->
@@ -570,24 +526,21 @@
     let tempRoomConfig = { timer: 15, totalQuestions: 3, maxPlayers: 10 };
     let currentBuildingQuestions = [];
     let currentBuildingIndex = 0;
-
     let currentRoom = { code: "", timer: 15, questions: [], maxPlayers: 10 };
+    
     let sessionState = { 
-        isHost: false,
-        playerId: "",
-        currentQuestionIndex: 0, 
-        score: 0, 
-        timerInterval: null, 
-        timeLeft: 15,
-        playerName: "",
-        selectedAvatarUrl: "",
-        userAnswers: [],
-        gameStarted: false,
-        gameFinished: false
+        isHost: false, playerId: "", currentQuestionIndex: 0, score: 0, 
+        timerInterval: null, timeLeft: 15, playerName: "", selectedAvatarUrl: "", 
+        userAnswers: [], gameStarted: false, gameFinished: false 
     };
 
     let roomListenerRef = null;
     let resultsCountdownInterval = null;
+
+    // DETECTOR DE PESTAÑA INACTIVA PARA CORTAR MÚSICA
+    document.addEventListener("visibilitychange", function() {
+        if (document.hidden) stopAllMusic();
+    });
 
     function selectAvatar(avatarId, avatarUrl, element) {
         document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
@@ -598,52 +551,30 @@
     function stopAllMusic() {
         ['bg-music', 'menu-music', 'gameplay-music', 'ranking-d-music', 'ranking-b-music', 'ranking-a-music', 'ranking-p-music'].forEach(id => {
             const audio = document.getElementById(id);
-            if (audio) {
-                audio.pause();
-                audio.currentTime = 0;
-            }
+            if (audio) { audio.pause(); audio.currentTime = 0; }
         });
     }
 
     function manageMusic(viewId, specificRank = null) {
-        const bgMusic = document.getElementById('bg-music');
-        const menuMusic = document.getElementById('menu-music');
-        const gameplayMusic = document.getElementById('gameplay-music');
-
-        if (viewId === 'results-view') {
-            stopAllMusic();
-            if (specificRank) {
-                const rankAudioMap = {
-                    'D': 'ranking-d-music',
-                    'B': 'ranking-b-music',
-                    'A': 'ranking-a-music',
-                    'P': 'ranking-p-music'
-                };
-                const audioId = rankAudioMap[specificRank];
-                if (audioId) {
-                    const targetAudio = document.getElementById(audioId);
-                    if (targetAudio) {
-                        targetAudio.currentTime = 0;
-                        let playPromise = targetAudio.play();
-                        if (playPromise !== undefined) {
-                            playPromise.catch(error => {
-                                console.log("Bloqueo de Autoplay superado con interacción previa:", error);
-                            });
-                        }
-                    }
-                }
-            }
-            return;
-        }
-
         stopAllMusic();
 
+        // En menú inicio y vistas pasivas, mantenemos silencio o música suave según se prefiera.
+        // Como el usuario pidió que no se reproduzca música de unirse en el menú, quitamos la música del home.
         if (viewId === 'create-config-view' || viewId === 'question-builder-view') {
-            bgMusic.play().catch(() => {});
-        } else if (viewId === 'join-view' || viewId === 'lobby-view' || viewId === 'home-view' || viewId === 'host-finished-view') {
-            menuMusic.play().catch(() => {});
-        } else if (viewId === 'game-view' || viewId === 'host-monitor-view' || viewId === 'student-waiting-view') {
-            gameplayMusic.play().catch(() => {});
+            document.getElementById('bg-music').play().catch(() => {});
+        } else if (viewId === 'join-view' || viewId === 'lobby-view') {
+            document.getElementById('menu-music').play().catch(() => {});
+        } else if (viewId === 'game-view' || viewId === 'host-monitor-view') {
+            document.getElementById('gameplay-music').play().catch(() => {});
+        } 
+        // Nota: home-view, student-waiting-view y host-finished-view quedan en silencio absoluto.
+        else if (viewId === 'results-view' && specificRank) {
+            const rankAudioMap = { 'D': 'ranking-d-music', 'B': 'ranking-b-music', 'A': 'ranking-a-music', 'P': 'ranking-p-music' };
+            const audioId = rankAudioMap[specificRank];
+            if (audioId) {
+                const targetAudio = document.getElementById(audioId);
+                if (targetAudio) targetAudio.play().catch(() => {});
+            }
         }
     }
 
@@ -655,23 +586,34 @@
         manageMusic(viewId, rank);
     }
 
+    /* --- LIMPIAR UI DE RESULTADOS --- */
+    function clearResultsUI() {
+        const rankFrame = document.getElementById('rank-frame-box');
+        const rankLetter = document.getElementById('final-rank-title');
+        const avatarWrapper = document.getElementById('avatar-result-display');
+
+        rankFrame.className = 'rank-frame-box'; 
+        rankLetter.className = 'rank-letter-display';
+        rankLetter.innerText = '-';
+        avatarWrapper.className = 'avatar-effect-wrapper';
+        avatarWrapper.style.display = 'none';
+        document.getElementById('res-step-actions').style.opacity = '0';
+    }
+
     /* --- CREACIÓN DE SALAS --- */
     function acceptConfigAndStartBuilder() { 
         tempRoomConfig.timer = parseInt(document.getElementById('config-timer').value) || 15; 
         tempRoomConfig.totalQuestions = parseInt(document.getElementById('config-num-questions').value) || 3; 
         tempRoomConfig.maxPlayers = parseInt(document.getElementById('config-max-players').value) || 10; 
-        currentBuildingQuestions = []; 
-        currentBuildingIndex = 0; 
-        showView('question-builder-view'); 
-        loadBuilderStep(); 
+        currentBuildingQuestions = []; currentBuildingIndex = 0; 
+        showView('question-builder-view'); loadBuilderStep(); 
     }
 
     function renderDynamicOptionsFields() { 
         const numOpts = parseInt(document.getElementById('builder-num-options').value) || 4; 
         const container = document.getElementById('dynamic-options-container'); 
         container.innerHTML = '<label>Opciones de respuesta:</label>'; 
-        let optionsHtml = ''; 
-        let selectCorrectHtml = '<label style="margin-top: 10px; display: block;">¿Cuál es la correcta?</label><select id="builder-correct-index">'; 
+        let optionsHtml = ''; let selectCorrectHtml = '<label style="margin-top: 10px; display: block;">¿Cuál es la correcta?</label><select id="builder-correct-index">'; 
         for (let i = 0; i < numOpts; i++) { 
             const letter = String.fromCharCode(65 + i); 
             optionsHtml += `<input type="text" id="builder-opt-${i}" placeholder="Opción ${letter}" required style="margin-bottom: 10px;">`; 
@@ -707,29 +649,21 @@
         if (!qText) return alert("Escribe la pregunta."); 
         const numOpts = parseInt(document.getElementById('builder-num-options').value); 
         let opts = []; 
-        for (let i = 0; i < numOpts; i++) { 
-            opts.push(document.getElementById(`builder-opt-${i}`).value.trim() || `Opción ${String.fromCharCode(65 + i)}`); 
-        } 
+        for (let i = 0; i < numOpts; i++) opts.push(document.getElementById(`builder-opt-${i}`).value.trim() || `Opción ${String.fromCharCode(65 + i)}`); 
+        
         currentBuildingQuestions[currentBuildingIndex] = { text: qText, options: opts, correct: parseInt(document.getElementById('builder-correct-index').value) }; 
         currentBuildingIndex++; 
-        if (currentBuildingIndex < tempRoomConfig.totalQuestions) { loadBuilderStep(); } 
-        else { finalizeRoomCreation(); } 
+        
+        if (currentBuildingIndex < tempRoomConfig.totalQuestions) loadBuilderStep(); 
+        else finalizeRoomCreation(); 
     }
 
     function finalizeRoomCreation() { 
         const roomCode = Math.floor(1000 + Math.random() * 9000).toString(); 
-        const roomData = { 
-            code: roomCode, 
-            timer: tempRoomConfig.timer, 
-            maxPlayers: tempRoomConfig.maxPlayers, 
-            status: "waiting", 
-            questions: currentBuildingQuestions 
-        }; 
+        const roomData = { code: roomCode, timer: tempRoomConfig.timer, maxPlayers: tempRoomConfig.maxPlayers, status: "waiting", questions: currentBuildingQuestions }; 
         
         db.ref('rooms/' + roomCode).set(roomData).then(() => { 
-            currentRoom = roomData; 
-            sessionState.isHost = true;
-            setupLobbyView(roomCode);
+            currentRoom = roomData; sessionState.isHost = true; setupLobbyView(roomCode);
         }).catch(() => alert("Error creando la sala.")); 
     }
 
@@ -745,12 +679,9 @@
                 if (room.status !== "waiting") return alert("La partida ya ha comenzado.");
                 
                 const players = room.players || {}; 
-                const playerCount = Object.keys(players).length; 
-                if (playerCount >= room.maxPlayers) return alert("La sala está llena.");
+                if (Object.keys(players).length >= room.maxPlayers) return alert("La sala está llena.");
 
-                currentRoom = room; 
-                sessionState.isHost = false;
-                sessionState.playerName = name;
+                currentRoom = room; sessionState.isHost = false; sessionState.playerName = name;
                 
                 const playerRef = db.ref(`rooms/${code}/players`).push();
                 sessionState.playerId = playerRef.key;
@@ -771,12 +702,10 @@
         
         if (sessionState.isHost) {
             document.getElementById('lobby-title').innerText = "Lobby del Anfitrión";
-            startBtn.classList.remove('hidden');
-            statusText.innerText = "Haz clic en Iniciar cuando los alumnos se hayan unido.";
+            startBtn.classList.remove('hidden'); statusText.innerText = "Haz clic en Iniciar cuando todos se unan.";
         } else {
             document.getElementById('lobby-title').innerText = "Esperando Partida";
-            startBtn.classList.add('hidden');
-            statusText.innerText = "Esperando a que el anfitrión inicie el test...";
+            startBtn.classList.add('hidden'); statusText.innerText = "Esperando al anfitrión...";
         }
 
         if (roomListenerRef) roomListenerRef.off();
@@ -785,37 +714,25 @@
         roomListenerRef.on('value', (snap) => {
             const data = snap.val();
             if (!data) {
-                if (!sessionState.isHost) {
-                    alert("El anfitrión ha cerrado la sala.");
-                    exitToHome();
-                }
+                if (!sessionState.isHost) { alert("El anfitrión cerró la sala."); exitToHome(); }
                 return;
             }
 
             if (data.status === "playing") {
-                if (sessionState.isHost) {
-                    showHostMonitorScreen(data.players || {});
-                } else if (!sessionState.gameStarted) {
-                    startPlayerGame();
-                }
+                if (sessionState.isHost) showHostMonitorScreen(data.players || {});
+                else if (!sessionState.gameStarted) startPlayerGame();
                 return;
             }
 
             if (data.status === "finished") {
-                if (sessionState.isHost) {
-                    showHostFinalSummary(data.players || {});
-                } else if (!sessionState.gameFinished) {
-                    endPlayerGame();
-                }
+                if (sessionState.isHost) showHostFinalSummary(data.players || {});
+                else if (!sessionState.gameFinished) endPlayerGame();
                 return;
             }
 
             const players = data.players || {};
             const playerArray = Object.values(players);
-            const count = playerArray.length;
-            const max = data.maxPlayers || 10;
-
-            document.getElementById('player-count-display').innerText = `${count} / ${max}`;
+            document.getElementById('player-count-display').innerText = `${playerArray.length} / ${data.maxPlayers || 10}`;
             const container = document.getElementById('players-container');
             container.innerHTML = '';
 
@@ -823,21 +740,15 @@
                 container.innerHTML += `
                     <div class="player-card-host">
                         <img src="${p.avatarUrl}" alt="${p.name}">
-                        <div class="player-info-host">
-                            <strong>${p.name}</strong>
-                        </div>
+                        <div class="player-info-host"><strong>${p.name}</strong></div>
                     </div>`;
             });
         });
     }
 
-    function hostStartGame() {
-        if (!sessionState.isHost) return;
-        db.ref(`rooms/${currentRoom.code}/status`).set("playing");
-    }
-
+    function hostStartGame() { if (sessionState.isHost) db.ref(`rooms/${currentRoom.code}/status`).set("playing"); }
+    
     function leaveLobby() {
-        if (roomListenerRef) roomListenerRef.off();
         if (!sessionState.isHost && sessionState.playerId && currentRoom.code) {
             db.ref(`rooms/${currentRoom.code}/players/${sessionState.playerId}`).remove();
         }
@@ -846,92 +757,58 @@
 
     function showHostMonitorScreen(players) {
         showView('host-monitor-view');
-        const grid = document.getElementById('host-progress-grid');
-        grid.innerHTML = '';
+        const grid = document.getElementById('host-progress-grid'); grid.innerHTML = '';
         const totalQ = currentRoom.questions.length;
-
         Object.values(players).forEach(p => {
-            const isDone = p.status === "finished";
-            const doneClass = isDone ? "finished" : "";
-            const answeredCount = p.currentQuestion || 0;
-            const progressText = isDone 
-                ? `<span style="color:#34d399; font-weight:700;">${totalQ}/${totalQ} (Listo)</span>` 
-                : `${answeredCount}/${totalQ} respondidas`;
-
-            grid.innerHTML += `
-                <div class="player-card-host ${doneClass}">
-                    <img src="${p.avatarUrl}" alt="${p.name}">
-                    <div class="player-info-host">
-                        <strong>${p.name}</strong>
-                        <span>${progressText}</span>
-                    </div>
-                </div>`;
+            const isDone = p.status === "finished"; const doneClass = isDone ? "finished" : "";
+            const ans = p.currentQuestion || 0;
+            const progress = isDone ? `<span style="color:#34d399; font-weight:700;">${totalQ}/${totalQ} (Listo)</span>` : `${ans}/${totalQ} respondidas`;
+            grid.innerHTML += `<div class="player-card-host ${doneClass}"><img src="${p.avatarUrl}"><div class="player-info-host"><strong>${p.name}</strong><span>${progress}</span></div></div>`;
         });
     }
 
     function showHostFinalSummary(players) {
         showView('host-finished-view');
-        const grid = document.getElementById('host-final-summary-grid');
-        grid.innerHTML = '';
-        const totalQ = currentRoom.questions.length;
-
+        const grid = document.getElementById('host-final-summary-grid'); grid.innerHTML = '';
         Object.values(players).forEach(p => {
-            const answeredCount = p.currentQuestion || 0;
-            grid.innerHTML += `
-                <div class="player-card-host finished">
-                    <img src="${p.avatarUrl}" alt="${p.name}">
-                    <div class="player-info-host">
-                        <strong>${p.name}</strong>
-                        <span style="color:#34d399; font-weight:700; font-size: 16px;">${answeredCount}/${totalQ}</span>
-                    </div>
-                </div>`;
+            grid.innerHTML += `<div class="player-card-host finished"><img src="${p.avatarUrl}"><div class="player-info-host"><strong>${p.name}</strong><span style="color:#34d399; font-weight:700;">${p.currentQuestion || 0}/${currentRoom.questions.length}</span></div></div>`;
         });
     }
 
-    function hostEndGame() {
-        if (!sessionState.isHost) return;
-        db.ref(`rooms/${currentRoom.code}/status`).set("finished");
-    }
-
+    function hostEndGame() { if (sessionState.isHost) db.ref(`rooms/${currentRoom.code}/status`).set("finished"); }
+    
     function closeRoomAndExit() {
-        if (sessionState.isHost && currentRoom.code) {
-            db.ref('rooms/' + currentRoom.code).remove();
-        }
+        if (sessionState.isHost && currentRoom.code) db.ref('rooms/' + currentRoom.code).remove();
         exitToHome();
     }
 
     /* --- JUEGO DEL ALUMNO --- */
     function startPlayerGame() { 
-        sessionState.gameStarted = true;
-        sessionState.currentQuestionIndex = 0; 
-        sessionState.score = 0; 
-        sessionState.userAnswers = []; 
-        
-        showView('game-view'); 
-        loadQuestion(); 
+        clearResultsUI(); // Limpiamos cualquier rastro de la partida anterior
+        sessionState.gameStarted = true; sessionState.currentQuestionIndex = 0; 
+        sessionState.score = 0; sessionState.userAnswers = []; 
+        showView('game-view'); loadQuestion(); 
     }
 
     function loadQuestion() { 
         if (sessionState.currentQuestionIndex >= currentRoom.questions.length) {
-            db.ref(`rooms/${currentRoom.code}/players/${sessionState.playerId}`).update({
-                status: "finished",
-                currentQuestion: currentRoom.questions.length
-            });
-            showView('student-waiting-view');
-            return;
+            db.ref(`rooms/${currentRoom.code}/players/${sessionState.playerId}`).update({ status: "finished", currentQuestion: currentRoom.questions.length });
+            showView('student-waiting-view'); return;
         } 
 
         const q = currentRoom.questions[sessionState.currentQuestionIndex]; 
-        
         document.getElementById('question-counter').innerHTML = `<i class="fa-solid fa-layer-group"></i> Pregunta ${sessionState.currentQuestionIndex + 1} de ${currentRoom.questions.length}`; 
         document.getElementById('question-title').innerText = q.text; 
+        
         const optCont = document.getElementById('options-container'); 
         optCont.innerHTML = ''; 
         
+        // Se aplican los colores a los botones según el índice (0:Rojo, 1:Azul, 2:Amarillo, 3:Verde)
         q.options.forEach((opt, i) => { 
             const letter = String.fromCharCode(65 + i);
+            const colorClass = `opt-color-${i % 4}`; // Asegura un color por opción cíclicamente
             optCont.innerHTML += `
-                <button class="option-btn" onclick="checkAnswer(${i})">
+                <button class="option-btn ${colorClass}" onclick="checkAnswer(${i})">
                     <span class="option-badge">${letter}</span>
                     <span>${opt}</span>
                 </button>`; 
@@ -941,32 +818,19 @@
         const timerBadge = document.getElementById('timer-badge');
         const timerBar = document.getElementById('timer-bar');
         
-        timerBadge.classList.remove('danger');
-        document.getElementById('timer-text').innerText = sessionState.timeLeft + 's'; 
-        timerBar.style.width = '100%'; 
-        timerBar.style.background = 'linear-gradient(90deg, #34d399, #818cf8)';
+        timerBadge.classList.remove('danger'); document.getElementById('timer-text').innerText = sessionState.timeLeft + 's'; 
+        timerBar.style.width = '100%'; timerBar.style.background = 'linear-gradient(90deg, #34d399, #818cf8)';
         
         clearInterval(sessionState.timerInterval); 
         sessionState.timerInterval = setInterval(() => { 
-            sessionState.timeLeft--; 
-            document.getElementById('timer-text').innerText = sessionState.timeLeft + 's'; 
-            
-            const pct = (sessionState.timeLeft / currentRoom.timer) * 100;
-            timerBar.style.width = pct + '%'; 
-
-            if (sessionState.timeLeft <= 5) {
-                timerBadge.classList.add('danger');
-                timerBar.style.background = '#ef4444';
-            }
-
+            sessionState.timeLeft--; document.getElementById('timer-text').innerText = sessionState.timeLeft + 's'; 
+            timerBar.style.width = ((sessionState.timeLeft / currentRoom.timer) * 100) + '%'; 
+            if (sessionState.timeLeft <= 5) { timerBadge.classList.add('danger'); timerBar.style.background = '#ef4444'; }
             if (sessionState.timeLeft <= 0) recordAnswer(-1); 
         }, 1000); 
     }
 
-    function checkAnswer(idx) { 
-        clearInterval(sessionState.timerInterval); 
-        recordAnswer(idx); 
-    }
+    function checkAnswer(idx) { clearInterval(sessionState.timerInterval); recordAnswer(idx); }
 
     function recordAnswer(idx) { 
         const q = currentRoom.questions[sessionState.currentQuestionIndex]; 
@@ -974,108 +838,82 @@
         if (isC) sessionState.score++; 
         
         sessionState.userAnswers.push({ 
-            questionText: q.text, 
-            selectedText: idx !== -1 ? q.options[idx] : "Tiempo agotado", 
-            correctText: q.options[q.correct], 
-            isCorrect: isC 
+            questionText: q.text, selectedText: idx !== -1 ? q.options[idx] : "Tiempo agotado", 
+            correctText: q.options[q.correct], isCorrect: isC 
         }); 
 
         sessionState.currentQuestionIndex++;
-
-        db.ref(`rooms/${currentRoom.code}/players/${sessionState.playerId}`).update({
-            currentQuestion: sessionState.currentQuestionIndex
-        });
-
+        db.ref(`rooms/${currentRoom.code}/players/${sessionState.playerId}`).update({ currentQuestion: sessionState.currentQuestionIndex });
         loadQuestion(); 
     }
 
     /* --- RESULTADOS DEL ALUMNO --- */
     function endPlayerGame() {
-        sessionState.gameFinished = true;
-        clearInterval(sessionState.timerInterval);
+        sessionState.gameFinished = true; clearInterval(sessionState.timerInterval);
 
         const totalQ = currentRoom.questions.length || 1;
         const percentage = Math.round((sessionState.score / totalQ) * 100);
-
-        // Determinar el rango con anticipación para activar su música exacta
         let rankTitle = "D";
         if (percentage === 100) rankTitle = "P";
         else if (percentage >= 75) rankTitle = "A";
         else if (percentage >= 40) rankTitle = "B";
 
-        // Mostrar vista y activar el tema correspondiente al rango obtenido
         showView('results-view', rankTitle);
-
         document.getElementById('result-student-name').innerText = `Alumno: ${sessionState.playerName}`;
 
-        const tableBody = document.getElementById('results-table-body');
-        tableBody.innerHTML = '';
-        
+        const tableBody = document.getElementById('results-table-body'); tableBody.innerHTML = '';
         if (sessionState.userAnswers.length > 0) {
             sessionState.userAnswers.forEach((ans) => {
-                const statusBadge = ans.isCorrect 
-                    ? `<span class="badge-correct"><i class="fa-solid fa-check"></i> Correcta</span>` 
-                    : `<span class="badge-incorrect"><i class="fa-solid fa-xmark"></i> Incorrecta</span>`;
+                const statusBadge = ans.isCorrect ? `<span class="badge-correct"><i class="fa-solid fa-check"></i> Correcta</span>` : `<span class="badge-incorrect"><i class="fa-solid fa-xmark"></i> Incorrecta</span>`;
                 tableBody.innerHTML += `<tr><td><strong>${ans.questionText}</strong></td><td>${ans.selectedText}</td><td>${ans.correctText}</td><td>${statusBadge}</td></tr>`;
             });
-        } else {
-            tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#94a3b8;">No respondiste ninguna pregunta a tiempo.</td></tr>`;
-        }
+        } else { tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#94a3b8;">Sin respuestas a tiempo.</td></tr>`; }
 
-        document.getElementById('res-step-actions').style.opacity = '0';
         animateCounter('final-score-percent', percentage, 3000);
 
         let countdown = 16;
         const timerBar = document.getElementById('results-timer-bar');
         const timerText = document.getElementById('results-timer-text');
         
-        timerBar.style.width = '100%';
-        timerText.innerText = `Calculando tu Rango Final en ${countdown}s...`;
-
+        timerBar.style.width = '100%'; timerText.innerText = `Calculando tu Rango Final en ${countdown}s...`;
         if (resultsCountdownInterval) clearInterval(resultsCountdownInterval);
-
         let rankRevealed = false;
 
         resultsCountdownInterval = setInterval(() => {
-            countdown--;
-            timerBar.style.width = `${(countdown / 16) * 100}%`;
-            
-            if (countdown > 5) {
-                timerText.innerText = `Calculando tu Rango Final en ${countdown}s...`;
-            } else {
-                timerText.innerText = `¡Revelando Rango!`;
-            }
+            countdown--; timerBar.style.width = `${(countdown / 16) * 100}%`;
+            if (countdown > 5) timerText.innerText = `Calculando tu Rango Final en ${countdown}s...`;
+            else timerText.innerText = `¡Revelando Rango!`;
 
             if (countdown <= 5 && !rankRevealed) {
-                rankRevealed = true;
-                revealRankWithAnimation(percentage, rankTitle);
+                rankRevealed = true; revealRankWithAnimation(rankTitle);
             }
 
             if (countdown <= 0) {
-                clearInterval(resultsCountdownInterval);
-                timerText.innerText = "¡Evaluación completada!";
+                clearInterval(resultsCountdownInterval); timerText.innerText = "¡Evaluación completada!";
                 document.getElementById('res-step-actions').style.opacity = '1';
             }
         }, 1000);
     }
 
-    function revealRankWithAnimation(percentage, rankTitle) {
+    function revealRankWithAnimation(rankTitle) {
         let frameClass = "frame-wooden", letterAnimClass = "anim-rank-d-slam", rankColor = "#ef4444";
         let isEpicP = false;
 
+        const avatarWrapper = document.getElementById('avatar-result-display');
+        document.getElementById('result-avatar-img').src = sessionState.selectedAvatarUrl;
+        avatarWrapper.style.display = 'block';
+
         if (rankTitle === "P") {
-            frameClass = "frame-diamond";
-            letterAnimClass = "anim-rank-p-epic";
-            rankColor = "#38bdf8";
-            isEpicP = true;
+            frameClass = "frame-diamond"; letterAnimClass = "anim-rank-p-epic"; rankColor = "#38bdf8"; isEpicP = true;
+            avatarWrapper.classList.add('fx-p-podium');
         } else if (rankTitle === "A") {
-            frameClass = "frame-gold";
-            letterAnimClass = "anim-rank-a-firm";
-            rankColor = "#fef08a";
+            frameClass = "frame-gold"; letterAnimClass = "anim-rank-a-firm"; rankColor = "#fef08a";
+            avatarWrapper.classList.add('fx-a-light');
         } else if (rankTitle === "B") {
-            frameClass = "frame-stone";
-            letterAnimClass = "anim-rank-b-crack";
-            rankColor = "#cbd5e1";
+            frameClass = "frame-stone"; letterAnimClass = "anim-rank-b-crack"; rankColor = "#cbd5e1";
+            avatarWrapper.classList.add('fx-b-clouds');
+        } else if (rankTitle === "D") {
+            avatarWrapper.classList.add('fx-d-rain');
         }
 
         const rankFrame = document.getElementById('rank-frame-box');
@@ -1084,10 +922,7 @@
 
         rankFrame.className = 'rank-frame-box ' + frameClass;
         rankLetter.className = 'rank-letter-display';
-        rankLetter.innerText = rankTitle;
-        rankLetter.style.color = rankColor;
-        rankLetter.style.textShadow = `0 0 20px ${rankColor}`;
-
+        rankLetter.innerText = rankTitle; rankLetter.style.color = rankColor; rankLetter.style.textShadow = `0 0 20px ${rankColor}`;
         rankFrame.classList.add('show-frame');
 
         setTimeout(() => {
@@ -1098,36 +933,22 @@
 
     function spawnSparkles(container) {
         for (let i = 0; i < 20; i++) {
-            const sparkle = document.createElement('div');
-            sparkle.className = 'sparkle-particle';
-            const dx = (Math.random() - 0.5) * 180 + 'px';
-            const dy = (Math.random() - 0.5) * 180 + 'px';
-            sparkle.style.setProperty('--dx', dx);
-            sparkle.style.setProperty('--dy', dy);
-            sparkle.style.left = '50%';
-            sparkle.style.top = '50%';
-            container.appendChild(sparkle);
-
-            setTimeout(() => sparkle.remove(), 1200);
+            const sparkle = document.createElement('div'); sparkle.className = 'sparkle-particle';
+            sparkle.style.setProperty('--dx', (Math.random() - 0.5) * 180 + 'px');
+            sparkle.style.setProperty('--dy', (Math.random() - 0.5) * 180 + 'px');
+            sparkle.style.left = '50%'; sparkle.style.top = '50%';
+            container.appendChild(sparkle); setTimeout(() => sparkle.remove(), 1200);
         }
     }
 
     function animateCounter(elementId, targetValue, durationMs) {
-        const el = document.getElementById(elementId);
-        if (!el) return;
+        const el = document.getElementById(elementId); if (!el) return;
         const startTime = performance.now();
-        
         function update(currentTime) {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / durationMs, 1);
+            const progress = Math.min((currentTime - startTime) / durationMs, 1);
             const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-            const currentVal = Math.floor(easeProgress * targetValue);
-            el.innerText = currentVal + '%';
-            if (progress < 1) {
-                requestAnimationFrame(update);
-            } else {
-                el.innerText = targetValue + '%';
-            }
+            el.innerText = Math.floor(easeProgress * targetValue) + '%';
+            if (progress < 1) requestAnimationFrame(update); else el.innerText = targetValue + '%';
         }
         requestAnimationFrame(update);
     }
@@ -1137,10 +958,12 @@
         if (resultsCountdownInterval) clearInterval(resultsCountdownInterval);
         if (sessionState.timerInterval) clearInterval(sessionState.timerInterval);
         
+        clearResultsUI();
+        
         sessionState = { 
-            isHost: false, playerId: "", currentQuestionIndex: 0, 
-            score: 0, timerInterval: null, timeLeft: 15, playerName: "", 
-            selectedAvatarUrl: "", userAnswers: [], gameStarted: false, gameFinished: false 
+            isHost: false, playerId: "", currentQuestionIndex: 0, score: 0, timerInterval: null, 
+            timeLeft: 15, playerName: "", selectedAvatarUrl: "", userAnswers: [], 
+            gameStarted: false, gameFinished: false 
         };
         showView('home-view');
     }
