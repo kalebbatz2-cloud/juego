@@ -536,11 +536,38 @@
 
     let roomListenerRef = null;
     let resultsCountdownInterval = null;
+    let currentPlayingAudioId = null; // Almacena qué audio está sonando actualmente para pausar/reanudar
 
-    // DETECTOR DE PESTAÑA INACTIVA PARA CORTAR MÚSICA
+    // CONTROL INTELIGENTE DE PAUSA/REANUDACIÓN AL CAMBIAR DE PESTAÑA O SALIR DE LA VENTANA
     document.addEventListener("visibilitychange", function() {
-        if (document.hidden) stopAllMusic();
+        if (document.hidden) {
+            pauseCurrentMusic();
+        } else {
+            resumeCurrentMusic();
+        }
     });
+
+    window.addEventListener("blur", function() {
+        pauseCurrentMusic();
+    });
+
+    window.addEventListener("focus", function() {
+        resumeCurrentMusic();
+    });
+
+    function pauseCurrentMusic() {
+        if (currentPlayingAudioId) {
+            const audio = document.getElementById(currentPlayingAudioId);
+            if (audio) audio.pause();
+        }
+    }
+
+    function resumeCurrentMusic() {
+        if (currentPlayingAudioId) {
+            const audio = document.getElementById(currentPlayingAudioId);
+            if (audio) audio.play().catch(() => {});
+        }
+    }
 
     function selectAvatar(avatarId, avatarUrl, element) {
         document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
@@ -553,28 +580,28 @@
             const audio = document.getElementById(id);
             if (audio) { audio.pause(); audio.currentTime = 0; }
         });
+        currentPlayingAudioId = null;
     }
 
     function manageMusic(viewId, specificRank = null) {
         stopAllMusic();
 
-        // En menú inicio y vistas pasivas, mantenemos silencio o música suave según se prefiera.
-        // Como el usuario pidió que no se reproduzca música de unirse en el menú, quitamos la música del home.
+        let targetId = null;
         if (viewId === 'create-config-view' || viewId === 'question-builder-view') {
-            document.getElementById('bg-music').play().catch(() => {});
+            targetId = 'bg-music';
         } else if (viewId === 'join-view' || viewId === 'lobby-view') {
-            document.getElementById('menu-music').play().catch(() => {});
+            targetId = 'menu-music';
         } else if (viewId === 'game-view' || viewId === 'host-monitor-view') {
-            document.getElementById('gameplay-music').play().catch(() => {});
-        } 
-        // Nota: home-view, student-waiting-view y host-finished-view quedan en silencio absoluto.
-        else if (viewId === 'results-view' && specificRank) {
+            targetId = 'gameplay-music';
+        } else if (viewId === 'results-view' && specificRank) {
             const rankAudioMap = { 'D': 'ranking-d-music', 'B': 'ranking-b-music', 'A': 'ranking-a-music', 'P': 'ranking-p-music' };
-            const audioId = rankAudioMap[specificRank];
-            if (audioId) {
-                const targetAudio = document.getElementById(audioId);
-                if (targetAudio) targetAudio.play().catch(() => {});
-            }
+            targetId = rankAudioMap[specificRank];
+        }
+
+        if (targetId) {
+            currentPlayingAudioId = targetId;
+            const audio = document.getElementById(targetId);
+            if (audio) audio.play().catch(() => {});
         }
     }
 
@@ -784,7 +811,7 @@
 
     /* --- JUEGO DEL ALUMNO --- */
     function startPlayerGame() { 
-        clearResultsUI(); // Limpiamos cualquier rastro de la partida anterior
+        clearResultsUI(); 
         sessionState.gameStarted = true; sessionState.currentQuestionIndex = 0; 
         sessionState.score = 0; sessionState.userAnswers = []; 
         showView('game-view'); loadQuestion(); 
@@ -803,10 +830,9 @@
         const optCont = document.getElementById('options-container'); 
         optCont.innerHTML = ''; 
         
-        // Se aplican los colores a los botones según el índice (0:Rojo, 1:Azul, 2:Amarillo, 3:Verde)
         q.options.forEach((opt, i) => { 
             const letter = String.fromCharCode(65 + i);
-            const colorClass = `opt-color-${i % 4}`; // Asegura un color por opción cíclicamente
+            const colorClass = `opt-color-${i % 4}`; 
             optCont.innerHTML += `
                 <button class="option-btn ${colorClass}" onclick="checkAnswer(${i})">
                     <span class="option-badge">${letter}</span>
@@ -881,10 +907,11 @@
 
         resultsCountdownInterval = setInterval(() => {
             countdown--; timerBar.style.width = `${(countdown / 16) * 100}%`;
-            if (countdown > 5) timerText.innerText = `Calculando tu Rango Final en ${countdown}s...`;
+            // Adelantamos la aparición del rango 2 segundos antes (cuando restan 7 segundos en lugar de 5)
+            if (countdown > 7) timerText.innerText = `Calculando tu Rango Final en ${countdown}s...`;
             else timerText.innerText = `¡Revelando Rango!`;
 
-            if (countdown <= 5 && !rankRevealed) {
+            if (countdown <= 7 && !rankRevealed) {
                 rankRevealed = true; revealRankWithAnimation(rankTitle);
             }
 
