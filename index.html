@@ -409,6 +409,17 @@
     Creado por <strong>Unkas Batz</strong> con ayuda de la plataforma <i class="fa-solid fa-sparkles"></i> Gemini
 </div>
 
+<!-- ================= ETIQUETAS DE AUDIO (ACTUALIZADAS) ================= -->
+<audio id="audio-home" src="home.mp3" loop preload="auto"></audio>
+<audio id="audio-creator" src="creator.mp3" loop preload="auto"></audio> <!-- Compartido: Crear sala y preguntas -->
+<audio id="audio-join" src="join.mp3" loop preload="auto"></audio>       <!-- Unirse a una sala -->
+<audio id="audio-game" src="game.mp3" loop preload="auto"></audio>       <!-- El test (preguntas) -->
+<audio id="audio-rank-p" src="rank_p.mp3" preload="auto"></audio>        <!-- Rango P (Diamante) -->
+<audio id="audio-rank-a" src="rank_a.mp3" preload="auto"></audio>        <!-- Rango A (Oro) -->
+<audio id="audio-rank-b" src="rank_b.mp3" preload="auto"></audio>        <!-- Rango B (Piedra) -->
+<audio id="audio-rank-d" src="rank_d.mp3" preload="auto"></audio>        <!-- Rango D (Madera) -->
+<!-- ===================================================================== -->
+
 <!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -441,7 +452,46 @@
     let questionTimerInterval = null;
     let currentQuestionTimeLeft = 15;
 
-    // Manejar carga de imagen en creador
+    // ================= GESTIÓN DE AUDIO PERSONALIZADA =================
+    function playSectionMusic(sectionId, rankType = null) {
+        // Detener todos los audios primero
+        const allAudios = document.querySelectorAll('audio');
+        allAudios.forEach(audio => {
+            audio.pause();
+            audio.currentTime = 0;
+        });
+
+        let audioToPlay = null;
+
+        if (sectionId === 'home-view' || sectionId === 'drafts-view') {
+            audioToPlay = document.getElementById('audio-home');
+        } else if (sectionId === 'create-config-view' || sectionId === 'question-builder-view') {
+            audioToPlay = document.getElementById('audio-creator'); // Compartida creación y preguntas
+        } else if (sectionId === 'join-view') {
+            audioToPlay = document.getElementById('audio-join');
+        } else if (sectionId === 'lobby-view' || sectionId === 'host-monitor-view') {
+            audioToPlay = document.getElementById('audio-join'); // Usa la de unirse o puedes crear una de lobby
+        } else if (sectionId === 'game-view') {
+            audioToPlay = document.getElementById('audio-game');
+        } else if (sectionId === 'results-view' || sectionId === 'host-finished-view') {
+            // Canción única según el rango obtenido
+            if (rankType === 'P') audioToPlay = document.getElementById('audio-rank-p');
+            else if (rankType === 'A') audioToPlay = document.getElementById('audio-rank-a');
+            else if (rankType === 'B') audioToPlay = document.getElementById('audio-rank-b');
+            else audioToPlay = document.getElementById('audio-rank-d');
+        }
+
+        if (audioToPlay) {
+            let playPromise = audioToPlay.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.warn("Navegador bloqueó el autoplay hasta que haya interacción.", error);
+                });
+            }
+        }
+    }
+    // ===================================================================
+
     document.getElementById('builder-q-image').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
@@ -462,9 +512,11 @@
         document.getElementById('builder-img-preview-container').style.display = 'none';
     }
 
-    function showView(viewId) {
+    function showView(viewId, rank = null) {
         document.querySelectorAll('.content-area').forEach(el => el.classList.add('hidden'));
         document.getElementById(viewId).classList.remove('hidden');
+        
+        playSectionMusic(viewId, rank);
     }
 
     function exitToHome() {
@@ -559,7 +611,6 @@
             return;
         }
 
-        // Guardar la pregunta actual si tiene texto
         if (qText) {
             const optionInputs = document.querySelectorAll('.opt-input');
             const radioInputs = document.querySelectorAll('input[name="correct-opt"]');
@@ -569,7 +620,6 @@
                 options.push(input.value.trim() || `Opción ${idx + 1}`);
                 if (radioInputs[idx].checked) correctIndex = idx;
             });
-            // Evitar duplicar si ya se estaba editando
             if(currentBuildingQuestions[currentQuestionBuilderIndex]) {
                 currentBuildingQuestions[currentQuestionBuilderIndex] = { question: qText, image: currentBase64Image || '', options, correct: correctIndex };
             } else {
@@ -626,8 +676,6 @@
 
         tempRoomConfig = draft.config;
         currentBuildingQuestions = draft.questions;
-        
-        // Iniciar sala directamente con las preguntas del borrador subidas a Firebase
         createRoomInFirebase();
     }
 
@@ -792,7 +840,6 @@
         document.getElementById('question-counter').innerHTML = `<i class="fa-solid fa-layer-group"></i> Pregunta ${currentStudentQuestionIndex + 1} de ${roomQuestions.length}`;
         document.getElementById('question-title').innerText = q.question;
 
-        // Manejar imagen en la pregunta para el alumno
         const imgDisplay = document.getElementById('question-image-display');
         if (q.image && q.image.trim() !== '') {
             imgDisplay.src = q.image;
@@ -867,7 +914,14 @@
     }
 
     function showStudentResults(scorePercent) {
-        showView('results-view');
+        let rank = 'D';
+        if (scorePercent >= 90) rank = 'P';
+        else if (scorePercent >= 75) rank = 'A';
+        else if (scorePercent >= 50) rank = 'B';
+
+        // Pasamos el rango a showView para activar su canción específica
+        showView('results-view', rank);
+
         document.getElementById('final-score-percent').innerText = scorePercent + '%';
         
         const tbody = document.getElementById('results-table-body');
@@ -882,11 +936,6 @@
                 </tr>
             `;
         });
-
-        let rank = 'D';
-        if (scorePercent >= 90) rank = 'P';
-        else if (scorePercent >= 75) rank = 'A';
-        else if (scorePercent >= 50) rank = 'B';
 
         document.getElementById('final-rank-title').innerText = rank;
         const frameBox = document.getElementById('rank-frame-box');
