@@ -603,6 +603,7 @@
     }
 
     // --- SISTEMA DE BORRADORES ---
+  // --- SISTEMA DE BORRADORES ---
     function saveAsDraft() {
         const qText = document.getElementById('builder-q-text').value.trim();
         if (!qText && currentBuildingQuestions.length === 0) {
@@ -675,7 +676,32 @@
 
         tempRoomConfig = draft.config;
         currentBuildingQuestions = draft.questions;
-        createRoomInFirebase();
+        
+        // Volvemos al índice 0 para editar desde el principio
+        currentQuestionBuilderIndex = 0;
+        
+        // Cargar los datos del borrador en los inputs de la pantalla del creador
+        if (currentBuildingQuestions.length > 0) {
+            const q = currentBuildingQuestions[0];
+            document.getElementById('builder-q-text').value = q.question || '';
+            document.getElementById('builder-num-options').value = q.options ? q.options.length.toString() : '4';
+            renderDynamicOptionsFields();
+            
+            // Rellenar los campos con las opciones guardadas
+            const optionInputs = document.querySelectorAll('.opt-input');
+            const radioInputs = document.querySelectorAll('input[name="correct-opt"]');
+            if (q.options) {
+                q.options.forEach((opt, idx) => {
+                    if (optionInputs[idx]) optionInputs[idx].value = opt;
+                    if (radioInputs[idx] && idx === q.correct) radioInputs[idx].checked = true;
+                });
+            }
+        }
+        
+        document.getElementById('builder-step-title').innerText = `Editando Borrador - Pregunta 1 de ${tempRoomConfig.totalQuestions}`;
+        
+        // Redirige al creador de preguntas en lugar de iniciar la sala de golpe
+        showView('question-builder-view');
     }
 
     function deleteDraft(id) {
@@ -685,8 +711,18 @@
         openDraftsModal();
     }
 
+    // Generador de código de 6 caracteres alfanuméricos
+    function generarCodigoSala() {
+        const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let codigo = '';
+        for (let i = 0; i < 6; i++) {
+            codigo += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+        }
+        return codigo;
+    }
+
     function createRoomInFirebase() {
-        const roomCode = Math.floor(1000 + Math.random() * 9000).toString();
+        const roomCode = generarCodigoSala();
         activeRoomCode = roomCode;
 
         const roomData = {
