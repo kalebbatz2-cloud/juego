@@ -249,8 +249,13 @@
     <div id="drafts-view" class="content-area hidden">
         <h2 class="slide-title"><i class="fa-solid fa-folder-open"></i> Mis Tests Guardados</h2>
         <div class="config-card" style="max-width: 600px; text-align: left;">
-            <p style="color: #94a3b8; font-size: 15px; margin-bottom: 10px;">Selecciona un borrador para abrirlo o eliminarlo:</p>
-            <div id="drafts-list-container" style="max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;"></div>
+            <p style="color: #94a3b8; font-size: 15px; margin-bottom: 10px;">Carga un borrador local o ingresa un código de nube de otro dispositivo:</p>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="cloud-draft-code-input" placeholder="Código de Nube (Ej. X7K9)" style="margin: 0; text-transform: uppercase;">
+                <button class="btn" onclick="loadDraftFromCloud()" style="white-space: nowrap;"><i class="fa-solid fa-cloud-arrow-down"></i> Descargar</button>
+            </div>
+            <p style="color: #94a3b8; font-size: 14px; margin-bottom: 8px;">Borradores en este dispositivo:</p>
+            <div id="drafts-list-container" style="max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;"></div>
         </div>
         <button class="btn btn-secondary" onclick="exitToHome()">Volver al Inicio</button>
     </div>
@@ -590,17 +595,65 @@
         const draftName = prompt('Nombre para identificar este borrador:', 'Test de ' + new Date().toLocaleDateString());
         if (!draftName) return;
 
-        let drafts = JSON.parse(localStorage.getItem('unkas_quiz_drafts') || '[]');
-        drafts.push({
+        const cloudCode = generarCodigoSala();
+        const draftData = {
             id: 'draft_' + Date.now(),
             name: draftName,
             config: tempRoomConfig,
-            questions: currentBuildingQuestions
-        });
+            questions: currentBuildingQuestions,
+            cloudCode: cloudCode
+        };
 
+        // Guardar localmente
+        let drafts = JSON.parse(localStorage.getItem('unkas_quiz_drafts') || '[]');
+        drafts.push(draftData);
         localStorage.setItem('unkas_quiz_drafts', JSON.stringify(drafts));
-        alert('¡Borrador guardado exitosamente!');
-        exitToHome();
+
+        // Guardar en la nube (Firebase) para cualquier dispositivo
+        db.ref('drafts/' + cloudCode).set(draftData).then(() => {
+            alert(`¡Borrador guardado con éxito!\n\nTu código para abrirlo en otro dispositivo es: ${cloudCode}`);
+            exitToHome();
+        }).catch(err => {
+            alert('Guardado localmente, pero hubo un error en la nube: ' + err.message);
+            exitToHome();
+        });
+    }
+
+    function loadDraftFromCloud() {
+        const code = document.getElementById('cloud-draft-code-input').value.trim().toUpperCase();
+        if (!code) {
+            alert('Por favor ingresa un código de nube válido.');
+            return;
+        }
+
+        db.ref('drafts/' + code).once('value').then(snapshot => {
+            if (!snapshot.exists()) {
+                alert('No se encontró ningún borrador con ese código.');
+                return;
+            }
+            const draft = snapshot.val();
+            
+            // Guardarlo localmente también para tenerlo a la mano
+            let drafts = JSON.parse(localStorage.getItem('unkas_quiz_drafts') || '[]');
+            if (!drafts.some(d => d.cloudCode === code)) {
+                drafts.push(draft);
+                localStorage.setItem('unkas_quiz_drafts', JSON.stringify(drafts));
+            }
+
+            tempRoomConfig = draft.config;
+            currentBuildingQuestions = draft.questions;
+            currentQuestionBuilderIndex = 0;
+            
+            document.getElementById('config-timer').value = tempRoomConfig.timer;
+            document.getElementById('config-num-questions').value = tempRoomConfig.totalQuestions;
+            document.getElementById('config-max-players').value = tempRoomConfig.maxPlayers;
+
+            loadBuilderStepFromLoaded();
+            showView('question-builder-view');
+            alert('¡Borrador descargado con éxito desde la nube!');
+        }).catch(err => {
+            alert('Error al conectar con la nube: ' + err.message);
+        });
     }
 
     function openDraftsModal() {
@@ -612,11 +665,13 @@
             container.innerHTML = '<p style="color: #94a3b8; text-align: center;">No tienes borradores guardados.</p>';
         } else {
             drafts.forEach(d => {
+                const codeBadge = d.cloudCode ? `<span style="color: #34d399; font-size: 12px; display: block;"><i class="fa-solid fa-cloud"></i> Código: ${d.cloudCode}</span>` : '';
                 container.innerHTML += `
                     <div style="background: #0f172a; border: 1px solid #475569; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <strong style="color: #f8fafc; display: block; font-size: 16px;">${d.name}</strong>
                             <span style="color: #94a3b8; font-size: 13px;">${d.questions.length} preguntas (Timer: ${d.config.timer}s)</span>
+                            ${codeBadge}
                         </div>
                         <div style="display: flex; gap: 8px;">
                             <button class="btn" style="padding: 8px 12px; font-size: 14px;" onclick="loadDraft('${d.id}')">Usar</button>
@@ -627,6 +682,54 @@
             });
         }
         showView('drafts-view');
+    }
+
+    function loadDraft(id) {
+        const drafts = JSON.parse(localStorage.getItem('unkas_quiz_drafts') || '[]');
+        const draft = drafts.find(d => d.id === id);
+        if (!draft) {
+            alert('No se encontró el borrador.');
+            return;
+        }
+
+        tempRoomConfig = draft.config;
+        currentBuildingQuestions = draft.questions;
+        currentQuestionBuilderIndex = 0;
+
+        document.getElementById('config-timer').value = tempRoomConfig.timer;
+        document.getElementById('config-num-questions').value = tempRoomConfig.totalQuestions;
+        document.getElementById('config-max-players').value = tempRoomConfig.maxPlayers;
+
+        loadBuilderStepFromLoaded();
+        showView('question-builder-view');
+    }
+
+    function loadBuilderStepFromLoaded() {
+        if (currentBuildingQuestions[currentQuestionBuilderIndex]) {
+            const q = currentBuildingQuestions[currentQuestionBuilderIndex];
+            document.getElementById('builder-step-title').innerText = `Editando Pregunta ${currentQuestionBuilderIndex + 1} de ${tempRoomConfig.totalQuestions}`;
+            document.getElementById('builder-q-text').value = q.question;
+            
+            if (q.image) {
+                currentBase64Image = q.image;
+                document.getElementById('builder-img-preview').src = q.image;
+                document.getElementById('builder-img-preview-container').style.display = 'block';
+            } else {
+                clearBuilderImage();
+            }
+
+            document.getElementById('builder-num-options').value = q.options.length;
+            renderDynamicOptionsFields();
+
+            const optionInputs = document.querySelectorAll('.opt-input');
+            const radioInputs = document.querySelectorAll('input[name="correct-opt"]');
+            q.options.forEach((optText, idx) => {
+                if (optionInputs[idx]) optionInputs[idx].value = optText;
+            });
+            if (radioInputs[q.correct]) radioInputs[q.correct].checked = true;
+        } else {
+            loadBuilderStep();
+        }
     }
 
     function deleteDraft(id) {
