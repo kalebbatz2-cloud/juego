@@ -511,20 +511,25 @@
         document.getElementById('builder-img-preview-container').style.display = 'none';
     }
 
-   function showView(viewId, rank = null) {
-    // Asegúrate de que este selector cubra exactamente las vistas de tu HTML
-    document.querySelectorAll('.view-container, [id$="-view"]').forEach(el => {
+  function showView(viewId, rank = null) {
+    // 1. Ocultar de forma agresiva usando tanto clases como estilos en línea
+    const allViews = document.querySelectorAll('.content-area, .view-container, [id$="-view"]');
+    allViews.forEach(el => {
         el.classList.add('hidden');
+        el.style.display = 'none'; // Forzar cierre visual para que no estorben
     });
-    
+
+    // 2. Mostrar únicamente la vista deseada
     const target = document.getElementById(viewId);
     if (target) {
         target.classList.remove('hidden');
+        target.style.display = 'block'; // Forzar apertura
+    } else {
+        console.error("No se encontró la vista con ID:", viewId);
     }
     
     playSectionMusic(viewId, rank);
 }
-
     function exitToHome() {
         activeRoomCode = null;
         showView('home-view');
