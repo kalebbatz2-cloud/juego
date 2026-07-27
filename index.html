@@ -915,6 +915,20 @@
     }
 
     function showStudentResults(scorePercent) {
+       function showStudentResults(scorePercent) {
+        // Validación de emergencia por si el porcentaje viene vacío
+        if (scorePercent === undefined || isNaN(scorePercent)) {
+            scorePercent = 0; 
+        }
+        
+        // Blindaje: Si por error el anfitrión entra aquí, lo desviamos a su vista de creador y detenemos esto
+        const isHost = document.getElementById('host-view') && !document.getElementById('host-view').classList.contains('hidden');
+        if (isHost) {
+            showView('host-finished-view');
+            if (typeof playSectionMusic === 'function') playSectionMusic('host-finished-view');
+            return;
+        }
+
         showView('results-view');
         
         // Elementos de la interfaz de resultados
@@ -926,41 +940,44 @@
         const frameBox = document.getElementById('results-rank-frame');
 
         // Limpiar estados iniciales para la animación de 16 segundos
-        detailsContainer.innerHTML = '<p style="color: #94a3b8;">Analizando respuestas correctas e incorrectas...</p>';
-        avgDisplay.innerText = 'Calculando...';
-        timeDisplay.innerText = '0s';
-        rankLetter.style.opacity = '0';
-        frameBox.className = 'rank-frame-base'; // Reset de clases de marcos
+        if (detailsContainer) detailsContainer.innerHTML = '<p style="color: #94a3b8;">Analizando respuestas correctas e incorrectas...</p>';
+        if (avgDisplay) avgDisplay.innerText = 'Calculando...';
+        if (timeDisplay) timeDisplay.innerText = '0s';
+        if (rankLetter) rankLetter.style.opacity = '0';
+        if (frameBox) frameBox.className = 'rank-frame-base'; // Reset de clases de marcos
 
         // --- FASE 1 (Segundero 0 a 4): Desglose de preguntas correctas e incorrectas ---
         setTimeout(() => {
-            let htmlList = '<ul style="list-style: none; padding: 0; text-align: left; max-height: 150px; overflow-y: auto;">';
-            let correctCount = 0;
-            
-            // Suponiendo que studentAnswers y currentQuizQuestions están disponibles globalmente
-            if (window.studentAnswers && window.currentQuizQuestions) {
-                window.currentQuizQuestions.forEach((q, idx) => {
-                    const userAns = window.studentAnswers[idx];
-                    const isCorrect = userAns === q.correct;
-                    if (isCorrect) correctCount++;
-                    htmlList += `<li style="margin-bottom: 5px; font-size: 14px; color: ${isCorrect ? '#4ade80' : '#f87171'};">
-                        <i class="fa-solid ${isCorrect ? 'fa-check' : 'fa-xmark'}"></i> Pregunta ${idx + 1}: ${isCorrect ? 'Correcta' : 'Incorrecta'}
-                    </li>`;
-                });
+            if (detailsContainer) {
+                let htmlList = '<ul style="list-style: none; padding: 0; text-align: left; max-height: 150px; overflow-y: auto;">';
+                
+                if (window.studentAnswers && window.currentQuizQuestions) {
+                    window.currentQuizQuestions.forEach((q, idx) => {
+                        const userAns = window.studentAnswers[idx];
+                        const isCorrect = userAns === q.correct;
+                        htmlList += `<li style="margin-bottom: 5px; font-size: 14px; color: ${isCorrect ? '#4ade80' : '#f87171'};">
+                            <i class="fa-solid ${isCorrect ? 'fa-check' : 'fa-xmark'}"></i> Pregunta ${idx + 1}: ${isCorrect ? 'Correcta' : 'Incorrecta'}
+                        </li>`;
+                    });
+                }
+                htmlList += '</ul>';
+                detailsContainer.innerHTML = htmlList;
             }
-            htmlList += '</ul>';
-            detailsContainer.innerHTML = htmlList;
         }, 0);
 
         // --- FASE 2 (Segundo 4 a 8): Porcentaje promedio de aciertos ---
         setTimeout(() => {
-            avgDisplay.innerText = `${scorePercent}% de aciertos`;
+            if (avgDisplay) {
+                avgDisplay.innerText = `${scorePercent}% de aciertos`;
+            }
         }, 4000);
 
         // --- FASE 3 (Segundo 8 a 11): Tiempo total transcurrido ---
         setTimeout(() => {
-            const totalTimeSpent = window.studentTotalTime || 45; // Respaldo por defecto
-            timeDisplay.innerText = `${totalTimeSpent} segundos`;
+            const totalTimeSpent = window.studentTotalTime || 45; 
+            if (timeDisplay) {
+                timeDisplay.innerText = `${totalTimeSpent} segundos`;
+            }
         }, 8000);
 
         // --- FASE 4 (Segundo 11 a 14): Avatar elegido y variantes climáticas/divinas ---
@@ -970,7 +987,6 @@
             else if (scorePercent >= 75) rank = 'A';
             else if (scorePercent >= 50) rank = 'B';
 
-            // Seleccionar variante de clima / efectos para el avatar
             let weatherEffectHTML = '';
             if (rank === 'D') {
                 weatherEffectHTML = '<div class="weather-effect rain-cloud"><i class="fa-solid fa-cloud-rain" style="color: #60a5fa; font-size: 28px;"></i></div>';
@@ -982,16 +998,20 @@
                 weatherEffectHTML = '<div class="weather-effect celestial-podium"><i class="fa-solid fa-ranking-star" style="color: #c084fc; font-size: 32px; filter: drop-shadow(0 0 8px #e879f9);"></i></div>';
             }
 
-            const userAvatarImg = localStorage.getItem('unkas_user_avatar') || 'default-avatar.png';
-            avatarContainer.innerHTML = `
-                <div style="position: relative; display: inline-block;">
-                    <img src="${userAvatarImg}" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #fff;" />
-                    ${weatherEffectHTML}
-                </div>
-            `;
+            if (avatarContainer) {
+                const userAvatarImg = localStorage.getItem('unkas_user_avatar') || 'default-avatar.png';
+                avatarContainer.innerHTML = `
+                    <div style="position: relative; display: inline-block;">
+                        <img src="${userAvatarImg}" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #fff;" />
+                        ${weatherEffectHTML}
+                    </div>
+                `;
+            }
             
-            // Disparar la música del jugador justo al iniciar la revelación del rango
-            playSectionMusic('results-view', rank);
+            // Disparar la música exclusiva del jugador según su rango obtenido
+            if (typeof playSectionMusic === 'function') {
+                playSectionMusic('results-view', rank);
+            }
         }, 11000);
 
         // --- FASE 5 (Segundo 14 a 16): Revelación final de Rangos y Marcos ---
@@ -1001,20 +1021,25 @@
             else if (scorePercent >= 75) rank = 'A';
             else if (scorePercent >= 50) rank = 'B';
 
-            rankLetter.innerText = rank;
+            if (rankLetter) {
+                rankLetter.innerText = rank;
+            }
             
-            if (rank === 'P') frameBox.classList.add('frame-diamond');
-            else if (rank === 'A') frameBox.classList.add('frame-gold');
-            else if (rank === 'B') frameBox.classList.add('frame-stone');
-            else frameBox.classList.add('frame-wooden');
+            if (frameBox) {
+                if (rank === 'P') frameBox.classList.add('frame-diamond');
+                else if (rank === 'A') frameBox.classList.add('frame-gold');
+                else if (rank === 'B') frameBox.classList.add('frame-stone');
+                else frameBox.classList.add('frame-wooden');
 
-            // Transición suave para hacer visible la letra del rango y su marco
-            frameBox.classList.add('show-frame');
-            rankLetter.style.transition = 'opacity 1s ease-in-out';
-            rankLetter.style.opacity = '1';
+                frameBox.classList.add('show-frame');
+            }
+
+            if (rankLetter) {
+                rankLetter.style.transition = 'opacity 1s ease-in-out';
+                rankLetter.style.opacity = '1';
+            }
         }, 14000);
     }
-
     function leaveLobby() {
         if (activeRoomCode && currentStudentId) {
             db.ref(`rooms/${activeRoomCode}/players/${currentStudentId}`).remove();
