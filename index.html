@@ -511,12 +511,19 @@
         document.getElementById('builder-img-preview-container').style.display = 'none';
     }
 
-    function showView(viewId, rank = null) {
-        document.querySelectorAll('.content-area').forEach(el => el.classList.add('hidden'));
-        document.getElementById(viewId).classList.remove('hidden');
-        
-        playSectionMusic(viewId, rank);
+   function showView(viewId, rank = null) {
+    // Asegúrate de que este selector cubra exactamente las vistas de tu HTML
+    document.querySelectorAll('.view-container, [id$="-view"]').forEach(el => {
+        el.classList.add('hidden');
+    });
+    
+    const target = document.getElementById(viewId);
+    if (target) {
+        target.classList.remove('hidden');
     }
+    
+    playSectionMusic(viewId, rank);
+}
 
     function exitToHome() {
         activeRoomCode = null;
@@ -915,129 +922,73 @@
     }
 
     function showStudentResults(scorePercent) {
-        // Validación de emergencia por si el porcentaje viene vacío
+   function showStudentResults(scorePercent) {
         if (scorePercent === undefined || isNaN(scorePercent)) {
             scorePercent = 0; 
         }
         
-        // Blindaje: Si por error el anfitrión entra aquí, lo desviamos a su vista de creador y detenemos esto
-        const isHost = document.getElementById('host-view') && !document.getElementById('host-view').classList.contains('hidden');
+        // Blindaje por si el anfitrión entra por error a la vista de alumno
+        const isHost = document.getElementById('host-monitor-view') && !document.getElementById('host-monitor-view').classList.contains('hidden');
         if (isHost) {
             showView('host-finished-view');
-            if (typeof playSectionMusic === 'function') playSectionMusic('host-finished-view');
             return;
         }
 
         showView('results-view');
         
-        // Elementos de la interfaz de resultados
-        const detailsContainer = document.getElementById('results-details-container');
-        const avgDisplay = document.getElementById('results-avg-percent');
-        const timeDisplay = document.getElementById('results-total-time');
-        const avatarContainer = document.getElementById('results-avatar-container');
-        const rankLetter = document.getElementById('final-rank-title');
-        const frameBox = document.getElementById('results-rank-frame');
+        document.getElementById('result-student-name').innerText = "Tus resultados finales";
+        
+        // Poblar la tabla de detalle de respuestas
+        const tableBody = document.getElementById('results-table-body');
+        tableBody.innerHTML = '';
+        studentAnswersRecord.forEach((ans, idx) => {
+            tableBody.innerHTML += `
+                <tr>
+                    <td>Pregunta ${idx + 1}</td>
+                    <td>${ans.selected}</td>
+                    <td>${ans.correct}</td>
+                    <td><span class="${ans.isCorrect ? 'badge-correct' : 'badge-incorrect'}">${ans.isCorrect ? 'Correcta' : 'Incorrecta'}</span></td>
+                </tr>
+            `;
+        });
 
-        // Limpiar estados iniciales para la animación de 16 segundos
-        if (detailsContainer) detailsContainer.innerHTML = '<p style="color: #94a3b8;">Analizando respuestas correctas e incorrectas...</p>';
-        if (avgDisplay) avgDisplay.innerText = 'Calculando...';
-        if (timeDisplay) timeDisplay.innerText = '0s';
-        if (rankLetter) rankLetter.style.opacity = '0';
-        if (frameBox) frameBox.className = 'rank-frame-base'; // Reset de clases de marcos
+        // Mostrar el porcentaje final
+        document.getElementById('final-score-percent').innerText = scorePercent + '%';
 
-        // --- FASE 1 (Segundero 0 a 4): Desglose de preguntas correctas e incorrectas ---
+        // Determinar el Rango según el porcentaje de aciertos
+        let rank = 'D';
+        if (scorePercent >= 90) rank = 'P';
+        else if (scorePercent >= 75) rank = 'A';
+        else if (scorePercent >= 50) rank = 'B';
+
+        // Mostrar imagen del avatar seleccionado en los resultados
+        const resultAvatarImg = document.getElementById('result-avatar-img');
+        if (selectedAvatarUrl) {
+            resultAvatarImg.src = selectedAvatarUrl;
+            document.getElementById('avatar-result-display').style.display = 'block';
+        }
+
+        // Configurar y reproducir el audio exclusivo según el rango obtenido
+        playSectionMusic('results-view', rank);
+
+        // Animación de aparición del marco y la letra del rango
+        const frameBox = document.getElementById('rank-frame-box');
+        const rankLetterDisplay = document.getElementById('final-rank-title');
+        
+        // Limpiar clases anteriores de marcos
+        frameBox.className = 'rank-frame-box';
+        
         setTimeout(() => {
-            if (detailsContainer) {
-                let htmlList = '<ul style="list-style: none; padding: 0; text-align: left; max-height: 150px; overflow-y: auto;">';
-                
-                if (window.studentAnswers && window.currentQuizQuestions) {
-                    window.currentQuizQuestions.forEach((q, idx) => {
-                        const userAns = window.studentAnswers[idx];
-                        const isCorrect = userAns === q.correct;
-                        htmlList += `<li style="margin-bottom: 5px; font-size: 14px; color: ${isCorrect ? '#4ade80' : '#f87171'};">
-                            <i class="fa-solid ${isCorrect ? 'fa-check' : 'fa-xmark'}"></i> Pregunta ${idx + 1}: ${isCorrect ? 'Correcta' : 'Incorrecta'}
-                        </li>`;
-                    });
-                }
-                htmlList += '</ul>';
-                detailsContainer.innerHTML = htmlList;
-            }
-        }, 0);
+            if (rank === 'P') frameBox.classList.add('frame-diamond');
+            else if (rank === 'A') frameBox.classList.add('frame-gold');
+            else if (rank === 'B') frameBox.classList.add('frame-stone');
+            else frameBox.classList.add('frame-gold'); // o frame-wooden según prefieras
 
-        // --- FASE 2 (Segundo 4 a 8): Porcentaje promedio de aciertos ---
-        setTimeout(() => {
-            if (avgDisplay) {
-                avgDisplay.innerText = `${scorePercent}% de aciertos`;
-            }
-        }, 4000);
-
-        // --- FASE 3 (Segundo 8 a 11): Tiempo total transcurrido ---
-        setTimeout(() => {
-            const totalTimeSpent = window.studentTotalTime || 45; 
-            if (timeDisplay) {
-                timeDisplay.innerText = `${totalTimeSpent} segundos`;
-            }
-        }, 8000);
-
-        // --- FASE 4 (Segundo 11 a 14): Avatar elegido y variantes climáticas/divinas ---
-        setTimeout(() => {
-            let rank = 'D';
-            if (scorePercent >= 90) rank = 'P';
-            else if (scorePercent >= 75) rank = 'A';
-            else if (scorePercent >= 50) rank = 'B';
-
-            let weatherEffectHTML = '';
-            if (rank === 'D') {
-                weatherEffectHTML = '<div class="weather-effect rain-cloud"><i class="fa-solid fa-cloud-rain" style="color: #60a5fa; font-size: 28px;"></i></div>';
-            } else if (rank === 'B') {
-                weatherEffectHTML = '<div class="weather-effect gray-cloud"><i class="fa-solid fa-cloud" style="color: #94a3b8; font-size: 28px;"></i></div>';
-            } else if (rank === 'A') {
-                weatherEffectHTML = '<div class="weather-effect sun-glow"><i class="fa-solid fa-sun" style="color: #facc15; font-size: 28px;"></i></div>';
-            } else if (rank === 'P') {
-                weatherEffectHTML = '<div class="weather-effect celestial-podium"><i class="fa-solid fa-ranking-star" style="color: #c084fc; font-size: 32px; filter: drop-shadow(0 0 8px #e879f9);"></i></div>';
-            }
-
-            if (avatarContainer) {
-                const userAvatarImg = localStorage.getItem('unkas_user_avatar') || 'default-avatar.png';
-                avatarContainer.innerHTML = `
-                    <div style="position: relative; display: inline-block;">
-                        <img src="${userAvatarImg}" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #fff;" />
-                        ${weatherEffectHTML}
-                    </div>
-                `;
-            }
-            
-            // Disparar la música exclusiva del jugador según su rango obtenido
-            if (typeof playSectionMusic === 'function') {
-                playSectionMusic('results-view', rank);
-            }
-        }, 11000);
-
-        // --- FASE 5 (Segundo 14 a 16): Revelación final de Rangos y Marcos ---
-        setTimeout(() => {
-            let rank = 'D';
-            if (scorePercent >= 90) rank = 'P';
-            else if (scorePercent >= 75) rank = 'A';
-            else if (scorePercent >= 50) rank = 'B';
-
-            if (rankLetter) {
-                rankLetter.innerText = rank;
-            }
-            
-            if (frameBox) {
-                if (rank === 'P') frameBox.classList.add('frame-diamond');
-                else if (rank === 'A') frameBox.classList.add('frame-gold');
-                else if (rank === 'B') frameBox.classList.add('frame-stone');
-                else frameBox.classList.add('frame-wooden');
-
-                frameBox.classList.add('show-frame');
-            }
-
-            if (rankLetter) {
-                rankLetter.style.transition = 'opacity 1s ease-in-out';
-                rankLetter.style.opacity = '1';
-            }
-        }, 14000);
+            frameBox.classList.add('show-frame');
+            rankLetterDisplay.innerText = rank;
+            rankLetterDisplay.style.transition = 'opacity 0.5s ease-in-out';
+            rankLetterDisplay.style.opacity = '1';
+        }, 500);
     }
     function leaveLobby() {
         if (activeRoomCode && currentStudentId) {
